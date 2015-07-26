@@ -73,7 +73,6 @@ bool PublicInfo::legalMove(const Choice& choice) const {
         case KING:
             for (int i = 0; i < totalPlayers_; ++i) {
                 if (i != choice.player_ && canTarget(i)) {
-                    printf("You can target %d\n", i);
                     return false;
                 }
             }
@@ -185,13 +184,12 @@ void Env::printDeck() const {
     printf("\n");
 }
 
-void Env::discard(int player) {
+void Env::discard(int player, Card reason) {
     if (hands_[player] == PRINCESS) {
         killPlayer(player);
     }
 
-    history_.emplace_back(
-        env_.turn_, player, hands_[player], UNKNOWN, Action(hands_[player], false, -1, UNKNOWN));
+    env_.history_.emplace_back(Event::DISCARD, reason);
 }
 
 Card Env::drawCard() {
@@ -217,7 +215,7 @@ bool Env::completeTurn(const Choice& choice) {
     }
 
     drawn_ = UNKNOWN;
-    history_.push_back(choice);
+    env_.history_.emplace_back(Event::ACTION, UNKNOWN, choice.action_);
 
     const Action& action = choice.action_;
 
@@ -246,7 +244,7 @@ bool Env::completeTurn(const Choice& choice) {
         env_.handmaiding_[player] = true;
         break;
     case PRINCE:
-        discard(target);
+        discard(target, PRINCE);
         hands_[target] = drawCard();
         break;
     case KING:

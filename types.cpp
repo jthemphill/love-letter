@@ -65,26 +65,43 @@ void Choice::print() const {
     int target = action_.targetPlayer_;
     switch (action_.card_) {
     case GUARD:
-        printf(", claiming player %d has %s", target, name_of_card(action_.cardNamed_));
-        break;
     case PRIEST:
-        printf(", looking at player %d's hand", target);
-        break;
     case BARON:
-        printf(", comparing hands with player %d", target);
-        break;
-    case HANDMAID:
-        printf(", getting protection for a turn");
-        break;
-    case PRINCE:
-        printf(", forcing player %d to discard and draw", target);
-        break;
     case KING:
-        printf(", trading hands with %d", target);
+        if (target < 0) {
+            printf(" but could not find a letter to tamper with.\n");
+            return;
+        }
         break;
     default:
         break;
     }
 
-    printf(".\n");
+    switch (action_.card_) {
+    case GUARD:
+        printf(" and claimed player %d has a %s.\n", target, name_of_card(action_.cardNamed_));
+        break;
+    case PRIEST:
+        printf(" and looked at player %d's hand.\n", target);
+        break;
+    case BARON:
+        printf(" and compared hands with player %d.\n", target);
+        break;
+    case HANDMAID:
+        printf(" and got protection for a turn.\n");
+        break;
+    case PRINCE:
+        printf(" and forced player %d to discard and draw.\n", target);
+        break;
+    case KING:
+        printf(" and traded hands with player %d.\n", target);
+        break;
+    default:
+        printf(".\n");
+        break;
+    }
 }
+
+Event::Event(Types type, Card reason): type_(type), reason_(reason) {}
+Event::Event(Types type, Card reason, const Action& action)
+    : type_(type), reason_(reason), action_(action) {}

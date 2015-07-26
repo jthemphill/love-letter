@@ -65,4 +65,20 @@ struct Player {
     Card card_;
 };
 
+struct Event {
+    enum Types {
+        DISCARD,
+        DEATH,
+        ACTION,
+        ROUND_END,
+    };
+
+    Types type_;
+    Card reason_;
+    Action action_;
+
+    Event(Types type, Card reason);
+    Event(Types type, Card reason, const Action& action);
+};
+
 #endif // TYPES_HPP

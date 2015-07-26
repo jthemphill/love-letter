@@ -13,14 +13,18 @@ struct PublicInfo {
     int tokens_[4];
     bool handmaiding_[4];
     bool live_[4];
+    std::vector<Event> history_;
+
+    void nextPlayer();
 
     PublicInfo(int starting_player, int num_players);
 
     bool legalMove(const Choice& choice) const;
     int livePlayers() const;
-    void nextPlayer();
     bool canTarget(int player) const;
-    Card lastCardPlayed(int player) const;
+    const std::vector<Event>& getHistory() const;
+
+    friend Env;
 };
 
 class Env {
@@ -30,9 +34,8 @@ class Env {
     Card burn_;
     Card drawn_;
     bool verbose_;
-    std::vector<Choice> history_;
 
-    void discard(int player);
+    void discard(int player, Card reason);
     Card drawCard();
     void killPlayer(int player);
 
