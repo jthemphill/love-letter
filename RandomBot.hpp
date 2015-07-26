@@ -7,12 +7,13 @@
 #include "Env.hpp"
 #include "Random.hpp"
 
-struct RandomBot {
+class RandomBot {
     Random random_;
 
     const PublicInfo& env_;
     int player_;
 
+public:
     RandomBot(const PublicInfo& env, int player);
 
     Action makeChoice(const Choice& choice);

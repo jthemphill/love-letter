@@ -9,6 +9,7 @@ PublicInfo::PublicInfo(int starting_player, int num_players)
       deckSize_(0) {
     for (int i = 0; i < num_players; ++i) {
         tokens_[i] = 0;
+        handmaiding_[i] = false;
         live_[i] = true;
     }
 }
@@ -40,6 +41,10 @@ bool PublicInfo::legalMove(const Choice& choice) const {
         return false;
     }
 
+    if (card != choice.holding_ && card != choice.drawn_) {
+        return false;
+    }
+
     if (target >= 0) {
         // If there is a target, make sure it's legal
         if (!canTarget(target)) {
@@ -59,6 +64,7 @@ bool PublicInfo::legalMove(const Choice& choice) const {
             break;
         }
     } else {
+        // If no target, make sure no one else is targetable
         switch (card) {
         case GUARD:
         case PRIEST:
@@ -67,6 +73,7 @@ bool PublicInfo::legalMove(const Choice& choice) const {
         case KING:
             for (int i = 0; i < totalPlayers_; ++i) {
                 if (i != choice.player_ && canTarget(i)) {
+                    printf("You can target %d\n", i);
                     return false;
                 }
             }
@@ -98,16 +105,16 @@ int PublicInfo::livePlayers() const {
 }
 
 bool PublicInfo::canTarget(int player) const {
-    if (!live_[player]) {
+    if (!live_[player] || handmaiding_[player]) {
         return false;
     }
 
-    // TODO handmaid
     return true;
 }
 
 Env::Env(int starting_player, int num_players, bool verbose)
     : env_(starting_player, num_players), drawn_(UNKNOWN), verbose_(verbose) {
+
     for (int card = GUARD; card <= PRINCESS; ++card) {
         for (int i = 0; i < quantity(Card(card)); ++i) {
             deck_[env_.deckSize_++] = (Card) card;
@@ -193,6 +200,8 @@ Card Env::drawCard() {
 
 Choice Env::startTurn() {
     int player = env_.activePlayer_;
+    env_.handmaiding_[player] = false;
+
     if (drawn_ == UNKNOWN) {
         drawn_ = drawCard();
     }
@@ -201,19 +210,24 @@ Choice Env::startTurn() {
 }
 
 bool Env::completeTurn(const Choice& choice) {
-    drawn_ = UNKNOWN;
-    history_.push_back(choice);
+    int player = env_.activePlayer_;
 
-    if (!env_.legalMove(choice)) {
+    if (choice.player_ != player || !env_.legalMove(choice)) {
         return false;
     }
 
+    drawn_ = UNKNOWN;
+    history_.push_back(choice);
+
     const Action& action = choice.action_;
 
-    int player = env_.activePlayer_;
     int target = action.targetPlayer_;
     Card named = action.cardNamed_;
     Card temp = UNKNOWN;
+
+    if (action.card_ == choice.holding_) {
+        hands_[player] = choice.drawn_;
+    }
 
     switch (action.card_) {
     case UNKNOWN:
@@ -229,12 +243,15 @@ bool Env::completeTurn(const Choice& choice) {
         killPlayer(hands_[target] < hands_[player] ? target : player);
         break;
     case HANDMAID:
+        env_.handmaiding_[player] = true;
         break;
     case PRINCE:
         discard(target);
         hands_[target] = drawCard();
         break;
     case KING:
+
+
         temp = hands_[target];
         hands_[target] = hands_[player];
         hands_[player] = temp;

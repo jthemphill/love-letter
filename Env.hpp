@@ -11,6 +11,7 @@ struct PublicInfo {
     int totalPlayers_;
     int deckSize_;
     int tokens_[4];
+    bool handmaiding_[4];
     bool live_[4];
 
     PublicInfo(int starting_player, int num_players);

@@ -26,10 +26,13 @@ int main() {
 
         int j = 0;
         Choice choice = game.startTurn();
-        do {
-            choice.action_ = bots[info.activePlayer_].makeChoice(choice);
-            choice.print();
-        } while (!game.completeTurn(choice) && j++ < 50);
+        choice.action_ = bots[info.activePlayer_].makeChoice(choice);
+        choice.print();
+        if (!game.completeTurn(choice)) {
+            printf("Player %d tried to make an illegal move!\n",
+                   info.activePlayer_);
+            return 1;
+        }
     }
 
     int winner = game.winner();

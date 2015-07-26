@@ -5,6 +5,7 @@ OBJECTS= Env.o types.o RandomBot.o Random.o
 test: main
 	./main
 
+.PHONY: clean
 clean:
 	rm main $(OBJECTS)
 
