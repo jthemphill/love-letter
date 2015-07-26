@@ -6,7 +6,7 @@
 
 int main() {
     Env game(0, 4, true);
-    const PublicEnv& info = game.getPublicInfo();
+    const PublicInfo& info = game.getPublicInfo();
 
     std::vector<RandomBot> bots;
     for (int i = 0; i < 4; ++i) {

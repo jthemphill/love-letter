@@ -14,7 +14,7 @@ Card randomCard(std::mt19937 rng, bool include_guard) {
     }
 }
 
-int randomTarget(const PublicEnv& env, int player, std::mt19937 rng, bool include_self) {
+int randomTarget(const PublicInfo& env, int player, std::mt19937 rng, bool include_self) {
     std::uniform_int_distribution<> die(include_self ? 0 : 1,
                                         env.livePlayers() - 1);
 

@@ -9,10 +9,10 @@
 struct RandomBot {
     std::mt19937 rng_;
 
-    const PublicEnv& env_;
+    const PublicInfo& env_;
     int player_;
 
-    RandomBot(const PublicEnv& env, int player);
+    RandomBot(const PublicInfo& env, int player);
 
     Action makeChoice(const Choice& choice);
 };

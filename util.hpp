@@ -7,7 +7,7 @@
 #include <random>
 
 Card randomCard(std::mt19937 rng, bool include_guard);
-int randomTarget(const PublicEnv& env, int player, std::mt19937 rng, bool include_self);
+int randomTarget(const PublicInfo& env, int player, std::mt19937 rng, bool include_self);
 bool countessCaught(Card maybe_countess, Card maybe_royalty);
 
 #endif // UTIL_H

@@ -1,7 +1,7 @@
 #include "RandomBot.hpp"
 #include "util.hpp"
 
-RandomBot::RandomBot(const PublicEnv& env, int player)
+RandomBot::RandomBot(const PublicInfo& env, int player)
     : env_(env), player_(player) {}
 
 Action RandomBot::makeChoice(const Choice& choice) {

@@ -5,7 +5,7 @@
 #include "types.hpp"
 #include "util.hpp"
 
-PublicEnv::PublicEnv(int starting_player, int num_players)
+PublicInfo::PublicInfo(int starting_player, int num_players)
     : turn_(0), activePlayer_(starting_player), totalPlayers_(num_players),
       deckSize_(0) {
     for (int i = 0; i < num_players; ++i) {
@@ -14,7 +14,7 @@ PublicEnv::PublicEnv(int starting_player, int num_players)
     }
 }
 
-void PublicEnv::nextPlayer() {
+void PublicInfo::nextPlayer() {
     int original = activePlayer_;
     do {
         activePlayer_ = (activePlayer_ + 1) % totalPlayers_;
@@ -32,7 +32,7 @@ void PublicEnv::nextPlayer() {
     }
 }
 
-bool PublicEnv::legalMove(const Choice& choice) const {
+bool PublicInfo::legalMove(const Choice& choice) const {
     const Action& action = choice.action_;
     Card card = action.card_;
     int target = action.targetPlayer_;
@@ -88,7 +88,7 @@ bool PublicEnv::legalMove(const Choice& choice) const {
     return true;
 }
 
-int PublicEnv::livePlayers() const {
+int PublicInfo::livePlayers() const {
     int count = 0;
     for (bool is_live : live_) {
         if (is_live) {
@@ -98,7 +98,7 @@ int PublicEnv::livePlayers() const {
     return count;
 }
 
-bool PublicEnv::canTarget(int player) const {
+bool PublicInfo::canTarget(int player) const {
     if (!live_[player]) {
         return false;
     }
@@ -124,7 +124,7 @@ Env::Env(int starting_player, int num_players, bool verbose)
     }
 }
 
-const PublicEnv& Env::getPublicInfo() const {
+const PublicInfo& Env::getPublicInfo() const {
     return env_;
 }
 

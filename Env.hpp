@@ -5,7 +5,7 @@
 
 #include "types.hpp"
 
-struct PublicEnv {
+struct PublicInfo {
     int turn_;
     int activePlayer_;
     int totalPlayers_;
@@ -13,7 +13,7 @@ struct PublicEnv {
     int tokens_[4];
     bool live_[4];
 
-    PublicEnv(int starting_player, int num_players);
+    PublicInfo(int starting_player, int num_players);
 
     bool legalMove(const Choice& choice) const;
     int livePlayers() const;
@@ -23,7 +23,7 @@ struct PublicEnv {
 };
 
 class Env {
-    PublicEnv env_;
+    PublicInfo env_;
     Card hands_[4];
     Card deck_[16];
     Card burn_;
@@ -38,7 +38,7 @@ class Env {
 public:
     Env(int starting_player, int num_players, bool verbose = false);
 
-    const PublicEnv& getPublicInfo() const;
+    const PublicInfo& getPublicInfo() const;
     int winner() const;
     void printHands() const;
     void printDeck() const;
