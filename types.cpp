@@ -34,6 +34,20 @@ const char* name_of_card(Card c) {
     }
 }
 
+bool countessCaught(Card maybe_countess, Card maybe_royalty) {
+    if (maybe_countess != COUNTESS) {
+        return false;
+    }
+
+    switch (maybe_royalty) {
+    case PRINCE:
+    case KING:
+        return true;
+    default:
+        return false;
+    }
+}
+
 void Choice::print() const {
     printf(
         "Player %d had [%s, %s], %s %s",

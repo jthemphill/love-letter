@@ -20,6 +20,7 @@ enum Card {
 int quantity(Card c);
 
 const char* name_of_card(Card c);
+bool countessCaught(Card maybe_countess, Card maybe_royalty);
 
 struct Action {
     Card card_;

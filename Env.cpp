@@ -3,7 +3,6 @@
 
 #include "Env.hpp"
 #include "types.hpp"
-#include "util.hpp"
 
 PublicInfo::PublicInfo(int starting_player, int num_players)
     : turn_(0), activePlayer_(starting_player), totalPlayers_(num_players),

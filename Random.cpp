@@ -1,24 +1,29 @@
-#include <random>
+#include "Random.hpp"
 
-#include "util.hpp"
-#include "types.hpp"
-#include "Env.hpp"
+bool Random::coinflip(int chance) {
+    if (chance <= 0) {
+        return false;
+    }
 
-Card randomCard(std::mt19937 rng, bool include_guard) {
+    std::uniform_int_distribution<> die(0, chance - 1);
+    return die(rng_) == 0;
+}
+
+Card Random::card(bool include_guard) {
     if (include_guard) {
         std::uniform_int_distribution<> cards(GUARD, PRINCESS);
-        return Card(cards(rng));
+        return Card(cards(rng_));
     } else {
         std::uniform_int_distribution<> cards(PRIEST, PRINCESS);
-        return Card(cards(rng));
+        return Card(cards(rng_));
     }
 }
 
-int randomTarget(const PublicInfo& env, int player, std::mt19937 rng, bool include_self) {
+int Random::target(const PublicInfo& env, int player, bool include_self) {
     std::uniform_int_distribution<> die(include_self ? 0 : 1,
                                         env.livePlayers() - 1);
 
-    int roll = die(rng);
+    int roll = die(rng_);
 
     int p = player;
     do {
@@ -38,18 +43,4 @@ int randomTarget(const PublicInfo& env, int player, std::mt19937 rng, bool inclu
     }
 
     return p;
-}
-
-bool countessCaught(Card maybe_countess, Card maybe_royalty) {
-    if (maybe_countess != COUNTESS) {
-        return false;
-    }
-
-    switch (maybe_royalty) {
-    case PRINCE:
-    case KING:
-        return true;
-    default:
-        return false;
-    }
 }

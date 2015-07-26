@@ -1,5 +1,5 @@
 #include "RandomBot.hpp"
-#include "util.hpp"
+#include "Random.hpp"
 
 RandomBot::RandomBot(const PublicInfo& env, int player)
     : env_(env), player_(player) {}
@@ -16,22 +16,22 @@ Action RandomBot::makeChoice(const Choice& choice) {
     }
 
     std::uniform_int_distribution<> coin(0, 1);
-    card_played = coin(rng_) ? hand_card : drawn_card;
+    card_played = random_.coinflip(2) ? hand_card : drawn_card;
 
     int target = -1;
     Card card_named = UNKNOWN;
 
     switch (card_played) {
     case GUARD:
-        card_named = randomCard(rng_, false);
+        card_named = random_.card(false);
         // FALLTHROUGH
     case PRIEST:
     case BARON:
     case KING:
-        target = randomTarget(env_, player_, rng_, false);
+        target = random_.target(env_, player_, false);
         break;
     case PRINCE:
-        target = randomTarget(env_, player_, rng_, true);
+        target = random_.target(env_, player_, true);
         break;
     default:
         break;

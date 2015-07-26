@@ -5,9 +5,10 @@
 
 #include "types.hpp"
 #include "Env.hpp"
+#include "Random.hpp"
 
 struct RandomBot {
-    std::mt19937 rng_;
+    Random random_;
 
     const PublicInfo& env_;
     int player_;
