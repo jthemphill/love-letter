@@ -13,10 +13,9 @@ Action RandomBot::makeChoice(const Choice& choice) {
         card_played = hand_card;
     } else if (countessCaught(drawn_card, hand_card)) {
         card_played = drawn_card;
+    } else {
+        card_played = random_.coinflip(2) ? hand_card : drawn_card;
     }
-
-    std::uniform_int_distribution<> coin(0, 1);
-    card_played = random_.coinflip(2) ? hand_card : drawn_card;
 
     int target = -1;
     Card card_named = UNKNOWN;

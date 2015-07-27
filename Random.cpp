@@ -1,4 +1,11 @@
+#include <random>
+
 #include "Random.hpp"
+
+Random::Random() {
+    std::random_device rd;
+    rng_ = std::default_random_engine(rd());
+}
 
 bool Random::coinflip(int chance) {
     if (chance <= 0) {
@@ -20,26 +27,31 @@ Card Random::card(bool include_guard) {
 }
 
 int Random::target(const PublicInfo& env, int player, bool include_self) {
-    std::uniform_int_distribution<> die(include_self ? 0 : 1,
-                                        env.livePlayers() - 1);
+    int targetable_players = env.targetablePlayers();
+    if (!include_self && env.canTarget(player)) {
+        --targetable_players;
+    }
 
+    if (targetable_players <= 0) {
+        return -1;
+    }
+
+    std::uniform_int_distribution<> die(0, targetable_players - 1);
     int roll = die(rng_);
 
-    int p = player;
-    do {
-        if (env.canTarget(p)) {
-            if (roll == 0) {
-                return p;
-            }
-
-            --roll;
+    int p = 0;
+    while (true) {
+        if (!env.canTarget(p) || (!include_self && p == player)) {
+            ++p;
+            continue;
         }
 
-        p = (p + 1) % env.totalPlayers_;
-    } while (p != player);
+        if (roll == 0) {
+            break;
+        }
 
-    if (!include_self && p == player) {
-        return -1;
+        --roll;
+        ++p;
     }
 
     return p;

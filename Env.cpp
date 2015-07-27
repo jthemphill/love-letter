@@ -103,6 +103,16 @@ int PublicInfo::livePlayers() const {
     return count;
 }
 
+int PublicInfo::targetablePlayers() const {
+    int count = 0;
+    for (int i = 0; i < totalPlayers_; ++i) {
+        if (canTarget(i)) {
+            ++count;
+        }
+    }
+    return count;
+}
+
 bool PublicInfo::canTarget(int player) const {
     if (!live_[player] || handmaiding_[player]) {
         return false;
@@ -145,7 +155,7 @@ int Env::winner() const {
         int num_ties = 0;
         Card high_card = UNKNOWN;
 
-        for (int i = 0; i < 4; ++i) {
+        for (int i = 0; i < env_.totalPlayers_; ++i) {
             if (!env_.live_[i]) {
                 continue;
             }
@@ -219,46 +229,57 @@ bool Env::completeTurn(const Choice& choice) {
 
     const Action& action = choice.action_;
 
-    int target = action.targetPlayer_;
-    Card named = action.cardNamed_;
-    Card temp = UNKNOWN;
-
     if (action.card_ == choice.holding_) {
         hands_[player] = choice.drawn_;
     }
 
     switch (action.card_) {
     case UNKNOWN:
-        break;
-    case GUARD:
-        if (hands_[target] == named) {
-            killPlayer(target);
-        }
-        break;
-    case PRIEST:
-        break;
-    case BARON:
-        killPlayer(hands_[target] < hands_[player] ? target : player);
+        printf("Tried to play an UNKNOWN card!\n");
+        exit(1);
         break;
     case HANDMAID:
         env_.handmaiding_[player] = true;
-        break;
-    case PRINCE:
-        discard(target, PRINCE);
-        hands_[target] = drawCard();
-        break;
-    case KING:
-
-
-        temp = hands_[target];
-        hands_[target] = hands_[player];
-        hands_[player] = temp;
         break;
     case COUNTESS:
         break;
     case PRINCESS:
         killPlayer(player);
         break;
+    default:
+        break;
+    }
+
+    int target = action.targetPlayer_;
+    if (target >= 0) {
+        Card named = action.cardNamed_;
+        Card temp = UNKNOWN;
+
+        switch (action.card_) {
+        case GUARD:
+            if (target >= 0 && hands_[target] == named) {
+                killPlayer(target);
+            }
+            break;
+        case PRIEST:
+            break;
+        case BARON:
+            if (target >= 0) {
+                killPlayer(hands_[target] < hands_[player] ? target : player);
+            }
+            break;
+        case PRINCE:
+            discard(target, PRINCE);
+            hands_[target] = drawCard();
+            break;
+        case KING:
+            temp = hands_[target];
+            hands_[target] = hands_[player];
+            hands_[player] = temp;
+            break;
+        default:
+            break;
+        }
     }
 
     env_.nextPlayer();

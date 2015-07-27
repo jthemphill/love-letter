@@ -105,3 +105,4 @@ void Choice::print() const {
 Event::Event(Types type, Card reason): type_(type), reason_(reason) {}
 Event::Event(Types type, Card reason, const Action& action)
     : type_(type), reason_(reason), action_(action) {}
+Event::Event(const Event& rhs): type_(rhs.type_), reason_(rhs.reason_), action_(rhs.action_) {}

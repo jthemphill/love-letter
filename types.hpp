@@ -28,15 +28,13 @@ struct Action {
     int targetPlayer_;
     Card cardNamed_;
 
-    Action() {}
+    Action()
+        : card_(UNKNOWN), played_(false), targetPlayer_(-1),
+          cardNamed_(UNKNOWN) {}
 
     Action(Card card, bool played, int target_player, Card card_named)
         : card_(card), played_(played), targetPlayer_(target_player),
           cardNamed_(card_named) {}
-
-    Action(const Action& rhs)
-        : card_(rhs.card_), played_(rhs.played_),
-          targetPlayer_(rhs.targetPlayer_), cardNamed_(rhs.cardNamed_) {}
 };
 
 struct Choice {
@@ -79,6 +77,7 @@ struct Event {
 
     Event(Types type, Card reason);
     Event(Types type, Card reason, const Action& action);
+    Event(const Event& event);
 };
 
 #endif // TYPES_HPP

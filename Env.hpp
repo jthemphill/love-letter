@@ -21,8 +21,8 @@ struct PublicInfo {
 
     bool legalMove(const Choice& choice) const;
     int livePlayers() const;
+    int targetablePlayers() const;
     bool canTarget(int player) const;
-    const std::vector<Event>& getHistory() const;
 
     friend Env;
 };
