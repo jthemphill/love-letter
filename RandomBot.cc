@@ -1,5 +1,6 @@
-#include "RandomBot.hpp"
-#include "Random.hpp"
+#include "RandomBot.h"
+#include "Random.h"
+#include "types.h"
 
 RandomBot::RandomBot(const PublicInfo& env, int player)
     : env_(env), player_(player) {}
@@ -17,7 +18,7 @@ Action RandomBot::makeChoice(const Choice& choice) {
         card_played = random_.coinflip(2) ? hand_card : drawn_card;
     }
 
-    int target = -1;
+    int target = NOBODY;
     Card card_named = UNKNOWN;
 
     switch (card_played) {

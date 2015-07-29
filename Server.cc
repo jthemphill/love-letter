@@ -1,8 +1,10 @@
-#include "Server.hpp"
-#include "RandomBot.hpp"
+#include "Server.h"
+#include "RandomBot.h"
 
-int Server::round(int starting_player, int num_players, bool verbose) {
-    Env game(starting_player, num_players, verbose);
+#include <vector>
+
+std::vector<int> Server::round(int starting_player, int num_players, bool verbose) {
+    Round game(starting_player, num_players, verbose);
 
     const PublicInfo& info = game.getPublicInfo();
 
@@ -17,7 +19,7 @@ int Server::round(int starting_player, int num_players, bool verbose) {
         game.printHands();
     }
     int i = 0;
-    while (game.winner() == -1 && i < 16) {
+    while (!game.isOver() && i < 16) {
         if (info.turn_ > turn) {
             turn = info.turn_;
             if (verbose) {
@@ -41,10 +43,20 @@ int Server::round(int starting_player, int num_players, bool verbose) {
         }
     }
 
-    int winner = game.winner();
+    std::vector<int> winners = game.getWinner();
     if (verbose) {
-        printf("Winner is %d.\n", winner);
+        if (winners.size() == 1) {
+            printf("Player %d wins.\n", winners[0]);
+        } else {
+            printf("Tie! Players ");
+            printf("%d", winners[0]);
+            for (int i = 1; i < winners.size() - 1; ++i) {
+                printf(", %d", winners[i]);
+            }
+
+            printf(" and %d win.\n", winners[winners.size() - 1]);
+        }
     }
 
-    return winner;
+    return winners;
 }

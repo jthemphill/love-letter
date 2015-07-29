@@ -3,9 +3,9 @@
 
 #include <random>
 
-#include "types.hpp"
-#include "Env.hpp"
-#include "Random.hpp"
+#include "types.h"
+#include "Round.h"
+#include "Random.h"
 
 class RandomBot {
     Random random_;

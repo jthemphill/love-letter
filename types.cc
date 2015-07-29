@@ -1,52 +1,6 @@
 #include <cstdio>
 
-#include "types.hpp"
-
-int quantity(Card c) {
-    switch (c) {
-    case UNKNOWN:
-        return -1;
-    case GUARD:
-        return 5;
-    case PRIEST:
-    case BARON:
-    case HANDMAID:
-    case PRINCE:
-        return 2;
-    case KING:
-    case COUNTESS:
-    case PRINCESS:
-        return 1;
-    }
-}
-
-const char* name_of_card(Card c) {
-    switch (c) {
-    case UNKNOWN: return "UNKNOWN";
-    case GUARD: return "Guard";
-    case PRIEST: return "Priest";
-    case BARON: return "Baron";
-    case HANDMAID: return "Handmaid";
-    case PRINCE: return "Prince";
-    case KING: return "King";
-    case COUNTESS: return "Countess";
-    case PRINCESS: return "Princess";
-    }
-}
-
-bool countessCaught(Card maybe_countess, Card maybe_royalty) {
-    if (maybe_countess != COUNTESS) {
-        return false;
-    }
-
-    switch (maybe_royalty) {
-    case PRINCE:
-    case KING:
-        return true;
-    default:
-        return false;
-    }
-}
+#include "types.h"
 
 void Choice::print() const {
     printf(
@@ -105,4 +59,3 @@ void Choice::print() const {
 Event::Event(Types type, Card reason): type_(type), reason_(reason) {}
 Event::Event(Types type, Card reason, const Action& action)
     : type_(type), reason_(reason), action_(action) {}
-Event::Event(const Event& rhs): type_(rhs.type_), reason_(rhs.reason_), action_(rhs.action_) {}

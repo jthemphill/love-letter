@@ -3,8 +3,8 @@
 
 #include <random>
 
-#include "types.hpp"
-#include "Env.hpp"
+#include "types.h"
+#include "PublicInfo.h"
 
 class Random {
     std::default_random_engine rng_;

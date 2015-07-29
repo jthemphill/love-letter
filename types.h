@@ -3,8 +3,6 @@
 
 #include <vector>
 
-class Env;
-
 enum Card {
     UNKNOWN = 0,
     GUARD = 1,
@@ -17,10 +15,53 @@ enum Card {
     PRINCESS = 8,
 };
 
-int quantity(Card c);
+const int NOBODY = -1;
 
-const char* name_of_card(Card c);
-bool countessCaught(Card maybe_countess, Card maybe_royalty);
+constexpr int quantity(Card c) {
+    switch (c) {
+    case UNKNOWN:
+        return -1;
+    case GUARD:
+        return 5;
+    case PRIEST:
+    case BARON:
+    case HANDMAID:
+    case PRINCE:
+        return 2;
+    case KING:
+    case COUNTESS:
+    case PRINCESS:
+        return 1;
+    }
+}
+
+constexpr const char* name_of_card(Card c) {
+    switch (c) {
+    case UNKNOWN: return "UNKNOWN";
+    case GUARD: return "Guard";
+    case PRIEST: return "Priest";
+    case BARON: return "Baron";
+    case HANDMAID: return "Handmaid";
+    case PRINCE: return "Prince";
+    case KING: return "King";
+    case COUNTESS: return "Countess";
+    case PRINCESS: return "Princess";
+    }
+}
+
+constexpr bool countessCaught(Card maybe_countess, Card maybe_royalty) {
+    if (maybe_countess != COUNTESS) {
+        return false;
+    }
+
+    switch (maybe_royalty) {
+    case PRINCE:
+    case KING:
+        return true;
+    default:
+        return false;
+    }
+}
 
 struct Action {
     Card card_;
@@ -77,7 +118,6 @@ struct Event {
 
     Event(Types type, Card reason);
     Event(Types type, Card reason, const Action& action);
-    Event(const Event& event);
 };
 
 #endif // TYPES_HPP

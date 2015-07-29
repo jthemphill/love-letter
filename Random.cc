@@ -1,6 +1,6 @@
 #include <random>
 
-#include "Random.hpp"
+#include "Random.h"
 
 Random::Random() {
     std::random_device rd;
