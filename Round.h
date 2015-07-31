@@ -8,13 +8,14 @@
 
 class Round {
     PublicInfo env_;
+    int turn_;
     Card hands_[4];
     Card deck_[16];
     Card burn_;
     Card drawn_;
     bool verbose_;
 
-    void discard(int player, Card reason);
+    void discard(int source_player, int target_player);
     Card drawCard();
     void killPlayer(int player);
     int sumCards(int player) const;

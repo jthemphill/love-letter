@@ -1,24 +1,19 @@
-#ifndef RANDOM_BOT_H
-#define RANDOM_BOT_H
-
-#include <random>
+#ifndef GREEDY_BOT_H
+#define GREEDY_BOT_H
 
 #include "Bot.h"
-#include "types.h"
-#include "Round.h"
 #include "Random.h"
 
-class RandomBot : public Bot {
+class GreedyBot : public Bot {
     Random random_;
 
     const PublicInfo& info_;
     int player_;
 
 public:
-    RandomBot(const PublicInfo& info, int player);
-
+    GreedyBot(const PublicInfo& info, int player);
     void addEvent(const Event& event);
     Action makeChoice(Card hand_card, Card drawn_card);
 };
 
-#endif // RANDOM_BOT_H
+#endif // GREEDY_BOT_H

@@ -55,8 +55,3 @@ void Choice::print() const {
         break;
     }
 }
-
-Event::Event(int player, Types type, Card reason)
-    : player_(player), type_(type), reason_(reason) {}
-Event::Event(int player, Types type, Card reason, const Action& action)
-    : player_(player), type_(type), reason_(reason), action_(action) {}

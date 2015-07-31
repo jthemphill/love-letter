@@ -1,5 +1,6 @@
 #include "Server.h"
 #include "Bot.h"
+#include "GreedyBot.h"
 #include "RandomBot.h"
 
 #include <vector>
@@ -49,7 +50,8 @@ int Server::round(int starting_player, int num_players, bool verbose) {
     const PublicInfo& info = round.getPublicInfo();
 
     Bot* bots[num_players];
-    for (int i = 0; i < 4; ++i) {
+    bots[0] = new GreedyBot(info, 0);
+    for (int i = 1; i < 4; ++i) {
         bots[i] = new RandomBot(info, i);
     }
 

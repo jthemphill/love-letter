@@ -99,26 +99,4 @@ struct Choice {
     void print() const;
 };
 
-struct Player {
-    int wins_;
-    Card card_;
-};
-
-struct Event {
-    enum Types {
-        DISCARD,
-        DEATH,
-        ACTION,
-        ROUND_END,
-    };
-
-    int player_;
-    Types type_;
-    Card reason_;
-    Action action_;
-
-    Event(int player, Types type, Card reason);
-    Event(int player, Types type, Card reason, const Action& action);
-};
-
 #endif // TYPES_HPP

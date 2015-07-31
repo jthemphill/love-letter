@@ -118,19 +118,26 @@ bool PublicInfo::canTarget(int player) const {
 }
 
 int PublicInfo::sumCards(int player) const {
-    int sum = 0;
-    for (Event e : history_) {
-        if (e.player_ != player) {
-            break;
-        }
+    const ActionEvent* ae = NULL;
+    const DiscardEvent* de = NULL;
 
-        switch (e.type_) {
+    int sum = 0;
+    for (const Event* e : history_) {
+        switch (e->type_) {
         case Event::DISCARD:
+            de = (const DiscardEvent*) e;
+            if (de->sourcePlayer_ == player) {
+                sum += int(de->cardDiscarded_);
+            }
+            break;
         case Event::ACTION:
-            sum += int(e.action_.card_);
+            ae = (const ActionEvent*) e;
+            if (ae->sourcePlayer_ == player) {
+                sum += int(ae->action_.played_);
+            }
             break;
         default:
-            break;
+            break;;
         }
     }
 

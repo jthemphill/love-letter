@@ -9,6 +9,7 @@
 Round::Round(int starting_player, int num_players, bool verbose)
     : env_(starting_player, num_players), drawn_(UNKNOWN), verbose_(verbose) {
 
+    turn_ = 0;
     for (int card = GUARD; card <= PRINCESS; ++card) {
         for (int i = 0; i < quantity(Card(card)); ++i) {
             deck_[env_.deckSize_++] = (Card) card;
@@ -105,14 +106,16 @@ void Round::printDeck() const {
     printf("\n");
 }
 
-void Round::discard(int player, Card reason) {
-    if (player == NOBODY) {
+void Round::discard(int source_player, int target_player) {
+    if (target_player == NOBODY) {
         throw std::out_of_range("Tried to make NOBODY discard");
     }
 
-    env_.history_.emplace_back(player, Event::DISCARD, reason);
-    if (hands_[player] == PRINCESS) {
-        killPlayer(player);
+    env_.history_.push_back(new DiscardEvent(turn_, source_player,
+                                             target_player,
+                                             hands_[target_player]));
+    if (hands_[target_player] == PRINCESS) {
+        killPlayer(target_player);
     }
 }
 
@@ -139,7 +142,7 @@ bool Round::completeTurn(const Choice& choice) {
     }
 
     drawn_ = UNKNOWN;
-    env_.history_.emplace_back(player, Event::ACTION, UNKNOWN, choice.action_);
+    env_.history_.push_back(new ActionEvent(turn_, player, choice.action_));
 
     const Action& action = choice.action_;
 
@@ -203,6 +206,7 @@ bool Round::completeTurn(const Choice& choice) {
 void Round::killPlayer(int player) {
     env_.live_[player] = false;
 
+    env_.history_.push_back(new DeathEvent(turn_, player, hands_[player]));
     if (verbose_) {
         printf("Player %d is out of the game!\n", player);
     }

@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "events.h"
 #include "types.h"
 
 struct PublicInfo {
@@ -13,7 +14,7 @@ struct PublicInfo {
     int tokens_[4];
     bool handmaiding_[4];
     bool live_[4];
-    std::vector<Event> history_;
+    std::vector<const Event*> history_;
 
     void nextPlayer();
 
