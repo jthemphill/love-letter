@@ -67,4 +67,6 @@ struct RevealedEvent : Event {
           cardRevealed_(cardRevealed) {}
 };
 
+typedef std::vector<const Event*> History;
+
 #endif // EVENTS_H

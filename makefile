@@ -15,7 +15,6 @@ main:	main.cc $(OBJECTS)
 clean:
 	rm -f *.o
 	rm -f main
-	rm -rf main.dSYM/
 
 .PHONY: run
 run: main

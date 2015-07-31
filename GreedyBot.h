@@ -12,7 +12,7 @@ class GreedyBot : public Bot {
 
 public:
     GreedyBot(const PublicInfo& info, int player);
-    void addEvent(const Event& event);
+    void addEvent(const Event* event);
     Action makeChoice(Card hand_card, Card drawn_card);
 };
 

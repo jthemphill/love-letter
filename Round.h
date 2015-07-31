@@ -15,9 +15,9 @@ class Round {
     Card drawn_;
     bool verbose_;
 
-    void discard(int source_player, int target_player);
+    void discard(History& events, int source_player, int target_player);
     Card drawCard();
-    void killPlayer(int player);
+    void killPlayer(History& events, int player);
     int sumCards(int player) const;
 
 public:
@@ -30,7 +30,7 @@ public:
     void printDeck() const;
 
     Choice startTurn();
-    bool completeTurn(const Choice& action);
+    bool completeTurn(History& history, const Choice& choice);
 };
 
 #endif // ROUND_HPP

@@ -45,6 +45,7 @@ int Server::game(int starting_player, int nplayers, bool verbose) {
 }
 
 int Server::round(int starting_player, int num_players, bool verbose) {
+    History history;
     Round round(starting_player, num_players, verbose);
 
     const PublicInfo& info = round.getPublicInfo();
@@ -79,7 +80,8 @@ int Server::round(int starting_player, int num_players, bool verbose) {
             choice.print();
         }
 
-        if (!round.completeTurn(choice)) {
+        History events;
+        if (!round.completeTurn(events, choice)) {
             printf("Player %d tried to make an illegal move!\n",
                    info.activePlayer_);
             exit(1);
@@ -94,5 +96,10 @@ int Server::round(int starting_player, int num_players, bool verbose) {
     for (int i = 0; i < num_players; ++i) {
         delete bots[i];
     }
+
+    for (const Event* e : history) {
+        delete e;
+    }
+
     return winner;
 }

@@ -5,7 +5,7 @@
 GreedyBot::GreedyBot(const PublicInfo& info, int player)
     : info_(info), player_(player) {}
 
-void GreedyBot::addEvent(const Event& event) {}
+void GreedyBot::addEvent(const Event* event) {}
 
 Action GreedyBot::makeChoice(Card hand_card, Card drawn_card) {
     Card card_played;

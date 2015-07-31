@@ -14,7 +14,7 @@ struct PublicInfo {
     int tokens_[4];
     bool handmaiding_[4];
     bool live_[4];
-    std::vector<const Event*> history_;
+    History history_;
 
     void nextPlayer();
 

@@ -106,16 +106,16 @@ void Round::printDeck() const {
     printf("\n");
 }
 
-void Round::discard(int source_player, int target_player) {
+void Round::discard(History& history, int source_player, int target_player) {
     if (target_player == NOBODY) {
         throw std::out_of_range("Tried to make NOBODY discard");
     }
 
-    env_.history_.push_back(new DiscardEvent(turn_, source_player,
-                                             target_player,
-                                             hands_[target_player]));
+    history.push_back(new DiscardEvent(turn_, source_player, target_player,
+                                       hands_[target_player]));
+
     if (hands_[target_player] == PRINCESS) {
-        killPlayer(target_player);
+        killPlayer(history, target_player);
     }
 }
 
@@ -134,7 +134,12 @@ Choice Round::startTurn() {
     return Choice(env_.turn_, player, hands_[player], drawn_);
 }
 
-bool Round::completeTurn(const Choice& choice) {
+bool Round::completeTurn(
+    History& history,
+    const Choice& choice
+    ) {
+
+    History events;
     int player = env_.activePlayer_;
 
     if (choice.player_ != player || !env_.legalMove(choice)) {
@@ -142,7 +147,7 @@ bool Round::completeTurn(const Choice& choice) {
     }
 
     drawn_ = UNKNOWN;
-    env_.history_.push_back(new ActionEvent(turn_, player, choice.action_));
+    events.push_back(new ActionEvent(turn_, player, choice.action_));
 
     const Action& action = choice.action_;
 
@@ -161,7 +166,7 @@ bool Round::completeTurn(const Choice& choice) {
     case COUNTESS:
         break;
     case PRINCESS:
-        killPlayer(player);
+        killPlayer(events, player);
         break;
     default:
         break;
@@ -169,44 +174,50 @@ bool Round::completeTurn(const Choice& choice) {
 
     int target = action.targetPlayer_;
     if (target >= 0) {
-        Card named = action.cardNamed_;
-        Card temp = UNKNOWN;
-
         switch (action.card_) {
         case GUARD:
-            if (target >= 0 && hands_[target] == named) {
-                killPlayer(target);
+            if (hands_[target] == action.cardNamed_) {
+                killPlayer(events, target);
             }
             break;
         case PRIEST:
             break;
         case BARON:
-            if (target >= 0) {
-                killPlayer(hands_[target] < hands_[player] ? target : player);
+            if (hands_[target] == hands_[player]) {
+                break;
             }
+            killPlayer(events,
+                       hands_[target] < hands_[player] ? target : player);
             break;
         case PRINCE:
-            discard(target, PRINCE);
+            discard(events, player, target);
             hands_[target] = drawCard();
             break;
         case KING:
-            temp = hands_[target];
+        {
+            Card temp = hands_[target];
             hands_[target] = hands_[player];
             hands_[player] = temp;
             break;
+        }
         default:
             break;
         }
+    }
+
+    for (auto& e : events) {
+        history.push_back(e);
+        env_.history_.push_back(e);
     }
 
     env_.nextPlayer();
     return true;
 }
 
-void Round::killPlayer(int player) {
+void Round::killPlayer(History& events, int player) {
     env_.live_[player] = false;
 
-    env_.history_.push_back(new DeathEvent(turn_, player, hands_[player]));
+    events.push_back(new DeathEvent(turn_, player, hands_[player]));
     if (verbose_) {
         printf("Player %d is out of the game!\n", player);
     }

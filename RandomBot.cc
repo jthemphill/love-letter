@@ -5,7 +5,7 @@
 RandomBot::RandomBot(const PublicInfo& env, int player)
     : info_(env), player_(player) {}
 
-void RandomBot::addEvent(const Event& event) {
+void RandomBot::addEvent(const Event* event) {
 }
 
 Action RandomBot::makeChoice(Card hand_card, Card drawn_card) {
