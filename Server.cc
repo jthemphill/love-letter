@@ -1,4 +1,5 @@
 #include "Server.h"
+#include "Bot.h"
 #include "RandomBot.h"
 
 #include <vector>
@@ -47,9 +48,9 @@ int Server::round(int starting_player, int num_players, bool verbose) {
 
     const PublicInfo& info = round.getPublicInfo();
 
-    std::vector<RandomBot> bots;
+    Bot* bots[num_players];
     for (int i = 0; i < 4; ++i) {
-        bots.emplace_back(info, i);
+        bots[i] = new RandomBot(info, i);
     }
 
     int turn = 0;
@@ -69,8 +70,8 @@ int Server::round(int starting_player, int num_players, bool verbose) {
 
         int j = 0;
         Choice choice = round.startTurn();
-        choice.action_ = bots[info.activePlayer_].makeChoice(choice.holding_,
-                                                             choice.drawn_);
+        choice.action_ = bots[info.activePlayer_]->makeChoice(choice.holding_,
+                                                              choice.drawn_);
 
         if (verbose) {
             choice.print();
@@ -88,5 +89,8 @@ int Server::round(int starting_player, int num_players, bool verbose) {
         printf("Player %d wins.\n\n", winner);
     }
 
+    for (int i = 0; i < num_players; ++i) {
+        delete bots[i];
+    }
     return winner;
 }

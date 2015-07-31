@@ -1,13 +1,14 @@
 #ifndef BOT_HPP
 #define BOT_HPP
 
-#include "types.hpp"
-#include "Env.hpp"
+#include "types.h"
 
-struct Bot {
-    virtual Action makeChoice(const Choice& choice) = 0;
+class Bot {
+ public:
+    virtual ~Bot() {}
 
-    virtual void observeAfterMove(const Action& last_action) = 0;
+    virtual void addEvent(const Event& event) = 0;
+    virtual Action makeChoice(Card hand_card, Card drawn_card) = 0;
 };
 
 #endif // BOT_HPP

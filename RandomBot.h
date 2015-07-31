@@ -3,20 +3,22 @@
 
 #include <random>
 
+#include "Bot.h"
 #include "types.h"
 #include "Round.h"
 #include "Random.h"
 
-class RandomBot {
+class RandomBot : public Bot {
     Random random_;
 
-    const PublicInfo& env_;
+    const PublicInfo& info_;
     int player_;
 
 public:
-    RandomBot(const PublicInfo& env, int player);
+    RandomBot(const PublicInfo& info, int player);
 
-    Action makeChoice(Card hand_card, Card drawn_card);
+    virtual void addEvent(const Event& event);
+    virtual Action makeChoice(Card hand_card, Card drawn_card);
 };
 
 #endif // RANDOM_BOT_HPP

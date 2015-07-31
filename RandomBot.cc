@@ -3,7 +3,10 @@
 #include "types.h"
 
 RandomBot::RandomBot(const PublicInfo& env, int player)
-    : env_(env), player_(player) {}
+    : info_(env), player_(player) {}
+
+void RandomBot::addEvent(const Event& event) {
+}
 
 Action RandomBot::makeChoice(Card hand_card, Card drawn_card) {
     Card card_played;
@@ -25,10 +28,10 @@ Action RandomBot::makeChoice(Card hand_card, Card drawn_card) {
     case PRIEST:
     case BARON:
     case KING:
-        target = random_.target(env_, player_, false);
+        target = random_.target(info_, player_, false);
         break;
     case PRINCE:
-        target = random_.target(env_, player_, true);
+        target = random_.target(info_, player_, true);
         break;
     default:
         break;
