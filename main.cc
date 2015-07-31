@@ -5,17 +5,17 @@
 #include "RandomBot.h"
 #include "Server.h"
 
+const int NGAMES = 10000;
+
 int main() {
     Server server;
-    server.round(0, 4, true);
+    server.game(0, 4, true);
 
+    printf("\nRunning %d games.\n", NGAMES);
     int scores[4] = { 0 };
-    for (int i = 0; i < 10000; ++i) {
-        std::vector<int> winners = server.round(0, 4, false);
-
-        for (int p : winners) {
-            ++scores[p];
-        }
+    for (int i = 0; i < NGAMES; ++i) {
+        int winner = server.game(0, 4, false);
+        ++scores[winner];
     }
 
     for (int i = 0; i < 4; ++i) {

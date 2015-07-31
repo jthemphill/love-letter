@@ -34,13 +34,13 @@ bool Round::isOver() const {
         env_.deckSize_ == 0;
 }
 
-std::vector<int> Round::getWinner() const {
+int Round::getWinner() const {
     int live_players = env_.livePlayers();
 
     if (live_players == 1) {
         for (int i = 0; i < env_.totalPlayers_; ++i) {
             if (env_.live_[i]) {
-                return std::vector<int>(1, i);
+                return i;
             }
         }
     } else if (env_.deckSize_ == 0) {
@@ -62,7 +62,26 @@ std::vector<int> Round::getWinner() const {
             }
         }
 
-        return std::vector<int>(winners, &winners[num_winners]);
+        if (num_winners == 1) {
+            return winners[0];
+        }
+
+        // In case of a tie, sum all cards played or discarded. High
+        // sum wins.
+        int real_winner = 0;
+        int high_sum = 0;
+        for (int i = 0; i < num_winners; ++i) {
+            int sum = env_.sumCards(winners[i]);
+            // If two people have the same sum, the younger player
+            // wins. This corresponds to the player with a low id
+            // number.
+            if (sum > high_sum) {
+                real_winner = winners[i];
+                high_sum = sum;
+            }
+        }
+
+        return real_winner;
     }
 
     throw std::logic_error("Called getWinner before the round finished.");
@@ -91,11 +110,10 @@ void Round::discard(int player, Card reason) {
         throw std::out_of_range("Tried to make NOBODY discard");
     }
 
+    env_.history_.emplace_back(player, Event::DISCARD, reason);
     if (hands_[player] == PRINCESS) {
         killPlayer(player);
     }
-
-    env_.history_.emplace_back(Event::DISCARD, reason);
 }
 
 Card Round::drawCard() {
@@ -121,7 +139,7 @@ bool Round::completeTurn(const Choice& choice) {
     }
 
     drawn_ = UNKNOWN;
-    env_.history_.emplace_back(Event::ACTION, UNKNOWN, choice.action_);
+    env_.history_.emplace_back(player, Event::ACTION, UNKNOWN, choice.action_);
 
     const Action& action = choice.action_;
 

@@ -9,7 +9,8 @@
 class Server {
 
 public:
-    std::vector<int> round(int starting_player, int num_players, bool verbose = false);
+    int game(int starting_player, int nplayers, bool verbose);
+    int round(int starting_player, int num_players, bool verbose = false);
 };
 
 #endif // SERVER_HPP

@@ -112,12 +112,13 @@ struct Event {
         ROUND_END,
     };
 
+    int player_;
     Types type_;
     Card reason_;
     Action action_;
 
-    Event(Types type, Card reason);
-    Event(Types type, Card reason, const Action& action);
+    Event(int player, Types type, Card reason);
+    Event(int player, Types type, Card reason, const Action& action);
 };
 
 #endif // TYPES_HPP

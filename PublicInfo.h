@@ -23,6 +23,7 @@ struct PublicInfo {
     int livePlayers() const;
     int targetablePlayers() const;
     bool canTarget(int player) const;
+    int sumCards(int player) const;
 
     friend class Env;
 };

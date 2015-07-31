@@ -116,3 +116,23 @@ bool PublicInfo::canTarget(int player) const {
 
     return true;
 }
+
+int PublicInfo::sumCards(int player) const {
+    int sum = 0;
+    for (Event e : history_) {
+        if (e.player_ != player) {
+            break;
+        }
+
+        switch (e.type_) {
+        case Event::DISCARD:
+        case Event::ACTION:
+            sum += int(e.action_.card_);
+            break;
+        default:
+            break;
+        }
+    }
+
+    return sum;
+}
