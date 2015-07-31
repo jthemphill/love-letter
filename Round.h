@@ -1,5 +1,5 @@
-#ifndef ROUND_HPP
-#define ROUND_HPP
+#ifndef ROUND_H
+#define ROUND_H
 
 #include <vector>
 
@@ -33,4 +33,4 @@ public:
     bool completeTurn(History& history, const Choice& choice);
 };
 
-#endif // ROUND_HPP
+#endif // ROUND_H

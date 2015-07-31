@@ -1,5 +1,5 @@
-#ifndef TYPES_HPP
-#define TYPES_HPP
+#ifndef TYPES_H
+#define TYPES_H
 
 #include <vector>
 
@@ -99,4 +99,4 @@ struct Choice {
     void print() const;
 };
 
-#endif // TYPES_HPP
+#endif // TYPES_H

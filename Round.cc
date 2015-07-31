@@ -16,7 +16,7 @@ Round::Round(int starting_player, int num_players, bool verbose)
         }
     }
 
-    std::shuffle(deck_, &deck_[15], std::default_random_engine());
+    std::shuffle(deck_, &deck_[16], std::default_random_engine());
 
     burn_ = drawCard();
 
@@ -120,7 +120,7 @@ void Round::discard(History& history, int source_player, int target_player) {
 }
 
 Card Round::drawCard() {
-    return env_.deckSize_ > 0 ? deck_[env_.deckSize_--] : burn_;
+    return env_.deckSize_ > 0 ? deck_[--env_.deckSize_] : burn_;
 }
 
 Choice Round::startTurn() {

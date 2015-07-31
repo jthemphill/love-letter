@@ -1,5 +1,5 @@
-#ifndef SERVER_HPP
-#define SERVER_HPP
+#ifndef SERVER_H
+#define SERVER_H
 
 #include <random>
 #include <vector>
@@ -13,4 +13,4 @@ public:
     int round(int starting_player, int num_players, bool verbose = false);
 };
 
-#endif // SERVER_HPP
+#endif // SERVER_H

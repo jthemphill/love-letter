@@ -1,5 +1,5 @@
-#ifndef PUBLIC_INFO_HPP
-#define PUBLIC_INFO_HPP
+#ifndef PUBLIC_INFO_H
+#define PUBLIC_INFO_H
 
 #include <vector>
 
@@ -29,4 +29,4 @@ struct PublicInfo {
     friend class Env;
 };
 
-#endif // PUBLIC_INFO_HPP
+#endif // PUBLIC_INFO_H

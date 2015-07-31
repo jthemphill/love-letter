@@ -71,7 +71,6 @@ int Server::round(int starting_player, int num_players, bool verbose) {
             }
         }
 
-        int j = 0;
         Choice choice = round.startTurn();
         choice.action_ = bots[info.activePlayer_]->makeChoice(choice.holding_,
                                                               choice.drawn_);
@@ -85,6 +84,15 @@ int Server::round(int starting_player, int num_players, bool verbose) {
             printf("Player %d tried to make an illegal move!\n",
                    info.activePlayer_);
             exit(1);
+        }
+
+        for (const Event* e : events) {
+            history.push_back(e);
+            for (int j = 0; j < num_players; ++j) {
+                if (e->type_ != Event::REVEALED || info.activePlayer_ == j) {
+                    bots[j]->addEvent(e);
+                }
+            }
         }
     }
 

@@ -1,5 +1,5 @@
-#ifndef RNG_HPP
-#define RNG_HPP
+#ifndef RANDOM_H
+#define RANDOM_H
 
 #include <random>
 
@@ -16,4 +16,4 @@ public:
     int target(const PublicInfo& env, int player, bool include_self);
 };
 
-#endif // RNG_HPP
+#endif // RANDOM_H

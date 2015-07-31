@@ -1,5 +1,5 @@
-#ifndef BOT_HPP
-#define BOT_HPP
+#ifndef BOT_H
+#define BOT_H
 
 #include "events.h"
 #include "types.h"
@@ -12,4 +12,4 @@ class Bot {
     virtual Action makeChoice(Card hand_card, Card drawn_card) = 0;
 };
 
-#endif // BOT_HPP
+#endif // BOT_H
