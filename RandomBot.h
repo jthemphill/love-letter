@@ -16,7 +16,7 @@ class RandomBot {
 public:
     RandomBot(const PublicInfo& env, int player);
 
-    Action makeChoice(const Choice& choice);
+    Action makeChoice(Card hand_card, Card drawn_card);
 };
 
 #endif // RANDOM_BOT_HPP

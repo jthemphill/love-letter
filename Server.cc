@@ -69,7 +69,8 @@ int Server::round(int starting_player, int num_players, bool verbose) {
 
         int j = 0;
         Choice choice = round.startTurn();
-        choice.action_ = bots[info.activePlayer_].makeChoice(choice);
+        choice.action_ = bots[info.activePlayer_].makeChoice(choice.holding_,
+                                                             choice.drawn_);
 
         if (verbose) {
             choice.print();

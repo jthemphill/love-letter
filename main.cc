@@ -7,9 +7,14 @@
 
 const int NGAMES = 10000;
 
-int main() {
+int main(int argc, char **argv) {
+    bool verbose = false;
+    if (argc >= 2 && !strncmp(argv[1], "-v", 2)) {
+        verbose = true;
+    }
+
     Server server;
-    server.game(0, 4, true);
+    server.game(0, 4, verbose);
 
     printf("\nRunning %d games.\n", NGAMES);
     int scores[4] = { 0 };

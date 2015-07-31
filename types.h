@@ -49,7 +49,7 @@ constexpr const char* name_of_card(Card c) {
     }
 }
 
-constexpr bool countessCaught(Card maybe_countess, Card maybe_royalty) {
+constexpr bool countess_caught(Card maybe_countess, Card maybe_royalty) {
     if (maybe_countess != COUNTESS) {
         return false;
     }

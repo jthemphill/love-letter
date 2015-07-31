@@ -80,8 +80,8 @@ bool PublicInfo::legalMove(const Choice& choice) const {
 
     // Countess rule
     if (card != COUNTESS &&
-        (countessCaught(choice.holding_, choice.drawn_) ||
-         countessCaught(choice.drawn_, choice.holding_))
+        (countess_caught(choice.holding_, choice.drawn_) ||
+         countess_caught(choice.drawn_, choice.holding_))
         ) {
         return false;
     }
