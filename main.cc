@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <cstring>
+#include <random>
 #include <vector>
 
 #include "Round.h"
@@ -15,13 +16,17 @@ int main(int argc, char **argv) {
         verbose = true;
     }
 
+    std::random_device rd;
+    std::default_random_engine rng(rd());
+    std::uniform_int_distribution<> players(0, NPLAYERS - 1);
+
     Server server;
-    server.game(0, NPLAYERS, verbose);
+    server.game(players(rng), NPLAYERS, verbose);
 
     printf("\nRunning %d games.\n", NGAMES);
     int scores[4] = { 0 };
     for (int i = 0; i < NGAMES; ++i) {
-        int winner = server.game(0, NPLAYERS, false);
+        int winner = server.game(players(rng), NPLAYERS, false);
         ++scores[winner];
     }
 

@@ -15,7 +15,7 @@ enum Card {
     PRINCESS = 8,
 };
 
-const int QUANTITIES[9] = {
+constexpr int QUANTITIES[9] = {
     /* UNKNOWN */ -1,
     /* GUARD */    5,
     /* PRIEST */   2,
@@ -33,7 +33,7 @@ constexpr int quantity(Card c) {
     return QUANTITIES[int(c)];
 }
 
-constexpr const char* name_of_card(Card c) {
+inline const char* name_of_card(Card c) {
     switch (c) {
     case UNKNOWN: return "UNKNOWN";
     case GUARD: return "Guard";
@@ -44,10 +44,12 @@ constexpr const char* name_of_card(Card c) {
     case KING: return "King";
     case COUNTESS: return "Countess";
     case PRINCESS: return "Princess";
+    default:
+        return NULL;
     }
 }
 
-constexpr bool countess_caught(Card maybe_countess, Card maybe_royalty) {
+inline bool countess_caught(Card maybe_countess, Card maybe_royalty) {
     if (maybe_countess != COUNTESS) {
         return false;
     }
