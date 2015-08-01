@@ -4,7 +4,7 @@
 
 #include "Round.h"
 #include "PublicInfo.h"
-#include "types.h"
+#include "const.h"
 
 Round::Round(int starting_player, int num_players, bool verbose)
     : env_(starting_player, num_players), drawn_(UNKNOWN), verbose_(verbose) {

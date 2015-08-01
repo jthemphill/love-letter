@@ -1,6 +1,6 @@
 #include "GreedyBot.h"
 #include "PublicInfo.h"
-#include "types.h"
+#include "const.h"
 
 GreedyBot::GreedyBot(const PublicInfo& info, int player)
     : info_(info), player_(player) {}

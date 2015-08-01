@@ -2,7 +2,7 @@
 #define BOT_H
 
 #include "events.h"
-#include "types.h"
+#include "const.h"
 
 class Bot {
  public:

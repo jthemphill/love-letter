@@ -5,7 +5,7 @@
 
 #include "choice.h"
 #include "events.h"
-#include "types.h"
+#include "const.h"
 
 struct PublicInfo {
     int turn_;

@@ -1,5 +1,5 @@
-#ifndef TYPES_H
-#define TYPES_H
+#ifndef CONST_H
+#define CONST_H
 
 #include <vector>
 
@@ -63,4 +63,4 @@ constexpr bool countess_caught(Card maybe_countess, Card maybe_royalty) {
     }
 }
 
-#endif // TYPES_H
+#endif // CONST_H

@@ -2,7 +2,7 @@
 #define EVENTS_H
 
 #include "actions.h"
-#include "types.h"
+#include "const.h"
 
 struct Event {
     enum Types {

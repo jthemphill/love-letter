@@ -3,7 +3,7 @@
 
 #include <random>
 
-#include "types.h"
+#include "const.h"
 #include "PublicInfo.h"
 
 class Random {

@@ -1,6 +1,6 @@
 #include "RandomBot.h"
 #include "Random.h"
-#include "types.h"
+#include "const.h"
 
 RandomBot::RandomBot(const PublicInfo& env, int player)
     : info_(env), player_(player) {}

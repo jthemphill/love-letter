@@ -4,7 +4,7 @@
 #include <random>
 
 #include "Bot.h"
-#include "types.h"
+#include "const.h"
 #include "Round.h"
 #include "Random.h"
 

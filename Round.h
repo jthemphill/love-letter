@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "types.h"
+#include "const.h"
 #include "PublicInfo.h"
 
 class Round {
