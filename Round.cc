@@ -149,13 +149,13 @@ bool Round::completeTurn(
     drawn_ = UNKNOWN;
     events.push_back(new ActionEvent(turn_, player, choice.action_));
 
-    const Action* action = choice.action_;
+    const Action& action = *choice.action_;
 
-    if (action->card_ == choice.holding_) {
+    if (action.card_ == choice.holding_) {
         hands_[player] = choice.drawn_;
     }
 
-    switch (action->card_) {
+    switch (action.card_) {
     case UNKNOWN:
         printf("Tried to play an UNKNOWN card!\n");
         exit(1);
@@ -172,13 +172,13 @@ bool Round::completeTurn(
         break;
     }
 
-    switch (action->card_) {
+    switch (action.card_) {
     case GUARD:
     case PRIEST:
     case BARON:
     case PRINCE:
     case KING:
-        resolveTargetedAction(events, player, *((const TargetedAction*) action));
+        resolveTargetedAction(events, player, (const TargetedAction&) action);
     default:
         break;
     }

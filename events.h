@@ -1,6 +1,8 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
+#include <vector>
+
 #include "actions.h"
 #include "const.h"
 
@@ -16,6 +18,7 @@ struct Event {
     int turn_;
 
     Event(Types type, int turn): type_(type), turn_(turn) {}
+    virtual ~Event() {}
 };
 
 struct DiscardEvent : Event {
