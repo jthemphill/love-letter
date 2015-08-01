@@ -1,10 +1,10 @@
 #include "PublicInfo.h"
 
-PublicInfo::PublicInfo(int starting_player, int num_players)
+PublicInfo::PublicInfo(int num_players, int starting_player, const int tokens[])
     : turn_(0), activePlayer_(starting_player), totalPlayers_(num_players),
       deckSize_(0) {
     for (int i = 0; i < num_players; ++i) {
-        tokens_[i] = 0;
+        tokens_[i] = tokens[i];
         handmaiding_[i] = false;
         live_[i] = true;
     }

@@ -6,14 +6,15 @@
 #include "PublicInfo.h"
 #include "const.h"
 
-Round::Round(int starting_player, int num_players,
-             std::default_random_engine rng, bool verbose)
-    : env_(starting_player, num_players), drawn_(UNKNOWN), verbose_(verbose) {
+Round::Round(int nplayers, int starting_player,
+             std::default_random_engine rng,
+             const int tokens[], bool verbose)
+    : info_(nplayers, starting_player, tokens), drawn_(UNKNOWN), verbose_(verbose) {
 
     turn_ = 0;
     for (int card = GUARD; card <= PRINCESS; ++card) {
         for (int i = 0; i < quantity(Card(card)); ++i) {
-            deck_[env_.deckSize_++] = (Card) card;
+            deck_[info_.deckSize_++] = (Card) card;
         }
     }
 
@@ -21,37 +22,37 @@ Round::Round(int starting_player, int num_players,
 
     burn_ = drawCard();
 
-    for (int i = 0; i < num_players; ++i) {
+    for (int i = 0; i < nplayers; ++i) {
         hands_[i] = drawCard();
     }
 }
 
 const PublicInfo& Round::getPublicInfo() const {
-    return env_;
+    return info_;
 }
 
 bool Round::isOver() const {
     return
-        env_.livePlayers() <= 1 ||
-        env_.deckSize_ == 0;
+        info_.livePlayers() <= 1 ||
+        info_.deckSize_ == 0;
 }
 
 int Round::getWinner() const {
-    int live_players = env_.livePlayers();
+    int live_players = info_.livePlayers();
 
     if (live_players == 1) {
-        for (int i = 0; i < env_.totalPlayers_; ++i) {
-            if (env_.live_[i]) {
+        for (int i = 0; i < info_.totalPlayers_; ++i) {
+            if (info_.live_[i]) {
                 return i;
             }
         }
-    } else if (env_.deckSize_ == 0) {
+    } else if (info_.deckSize_ == 0) {
         int winners[live_players];
         int num_winners = 0;
         Card high_card = UNKNOWN;
 
-        for (int i = 0; i < env_.totalPlayers_; ++i) {
-            if (!env_.live_[i]) {
+        for (int i = 0; i < info_.totalPlayers_; ++i) {
+            if (!info_.live_[i]) {
                 continue;
             }
 
@@ -73,7 +74,7 @@ int Round::getWinner() const {
         int real_winner = 0;
         int high_sum = 0;
         for (int i = 0; i < num_winners; ++i) {
-            int sum = env_.sumCards(winners[i]);
+            int sum = info_.sumCards(winners[i]);
             // If two people have the same sum, the younger player
             // wins. We'll say that's the player with the lower id
             // number.
@@ -90,8 +91,8 @@ int Round::getWinner() const {
 }
 
 void Round::printHands() const {
-    for (int i = 0; i < env_.totalPlayers_; ++i) {
-        if (env_.live_[i]) {
+    for (int i = 0; i < info_.totalPlayers_; ++i) {
+        if (info_.live_[i]) {
             printf("Player %d: %s\n", i, name_of_card(hands_[i]));
         } else {
             printf("[Player %d is out of the game]\n", i);
@@ -101,7 +102,7 @@ void Round::printHands() const {
 }
 
 void Round::printDeck() const {
-    for (int i = 0; i < env_.deckSize_; ++i) {
+    for (int i = 0; i < info_.deckSize_; ++i) {
         printf("%s\n", name_of_card(deck_[i]));
     }
     printf("\n");
@@ -115,7 +116,7 @@ void Round::discard(History& history, int source_player, int target_player) {
     history.push_back(new DiscardEvent(turn_, source_player, target_player,
                                        hands_[target_player]));
 
-    if (hands_[target_player] == PRINCESS && env_.live_[target_player]) {
+    if (hands_[target_player] == PRINCESS && info_.live_[target_player]) {
         killPlayer(history, target_player);
     }
 
@@ -123,18 +124,18 @@ void Round::discard(History& history, int source_player, int target_player) {
 }
 
 Card Round::drawCard() {
-    return env_.deckSize_ > 0 ? deck_[--env_.deckSize_] : burn_;
+    return info_.deckSize_ > 0 ? deck_[--info_.deckSize_] : burn_;
 }
 
 Choice Round::startTurn() {
-    int player = env_.activePlayer_;
-    env_.handmaiding_[player] = false;
+    int player = info_.activePlayer_;
+    info_.handmaiding_[player] = false;
 
     if (drawn_ == UNKNOWN) {
         drawn_ = drawCard();
     }
 
-    return Choice(env_.turn_, player, hands_[player], drawn_);
+    return Choice(info_.turn_, player, hands_[player], drawn_);
 }
 
 bool Round::completeTurn(
@@ -143,9 +144,9 @@ bool Round::completeTurn(
     ) {
 
     History events;
-    int player = env_.activePlayer_;
+    int player = info_.activePlayer_;
 
-    if (choice.player_ != player || !env_.legalMove(choice)) {
+    if (choice.player_ != player || !info_.legalMove(choice)) {
         return false;
     }
 
@@ -164,7 +165,7 @@ bool Round::completeTurn(
         exit(1);
         break;
     case HANDMAID:
-        env_.handmaiding_[player] = true;
+        info_.handmaiding_[player] = true;
         break;
     case COUNTESS:
         break;
@@ -188,10 +189,10 @@ bool Round::completeTurn(
 
     for (auto& e : events) {
         history.push_back(e);
-        env_.history_.push_back(e);
+        info_.history_.push_back(e);
     }
 
-    env_.nextPlayer();
+    info_.nextPlayer();
     return true;
 }
 
@@ -221,7 +222,7 @@ void Round::resolveTargetedAction(History& events, int player,
         break;
     case PRINCE:
         discard(events, player, target);
-        if (env_.live_[target]) {
+        if (info_.live_[target]) {
             hands_[target] = drawCard();
         }
         break;
@@ -238,7 +239,7 @@ void Round::resolveTargetedAction(History& events, int player,
 }
 
 void Round::killPlayer(History& events, int player) {
-    env_.live_[player] = false;
+    info_.live_[player] = false;
 
     events.push_back(new DeathEvent(turn_, player, hands_[player]));
 

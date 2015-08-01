@@ -59,3 +59,46 @@ int Random::target(const PublicInfo& env, int player, bool include_self) {
 
     return p;
 }
+
+int Random::winningTarget(const PublicInfo& env, int player) {
+    int targetable_players = env.targetablePlayers();
+    if (env.canTarget(player)) {
+        --targetable_players;
+    }
+
+    if (targetable_players <= 0) {
+        return NOBODY;
+    }
+
+    int num_ties = 0;
+    int max_tokens = -1;
+    for (int i = 0; i < env.totalPlayers_; ++i) {
+        if (i == player || !env.canTarget(i) || env.tokens_[i] < max_tokens) {
+            continue;
+        }
+
+        if (env.tokens_[i] > max_tokens) {
+            num_ties = 0;
+            max_tokens = env.tokens_[i];
+        } else {
+            ++num_ties;
+        }
+    }
+
+    std::uniform_int_distribution<> die(0, num_ties);
+    int roll = die(rng_);
+
+    for (int i = 0; i < env.totalPlayers_; ++i) {
+        if (i == player || !env.canTarget(i) || env.tokens_[i] < max_tokens) {
+            continue;
+        }
+
+        if (roll == 0) {
+            return i;
+        }
+
+        --roll;
+    }
+
+    throw std::logic_error("Reached the end of the function");
+}

@@ -27,7 +27,7 @@ const Action* GuardBot::makeChoice(Card hand_card, Card drawn_card) {
     switch (lower_card) {
     case GUARD:
     {
-        int target = random_.target(info_, player_, false);
+        int target = random_.winningTarget(info_, player_);
         Card named_card = chooseCardToName(hand_card, drawn_card);
         return new GuardAction(target, named_card);
     }

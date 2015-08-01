@@ -15,6 +15,7 @@ public:
     int roll(int min, int max);
     Card card(bool include_guard);
     int target(const PublicInfo& env, int player, bool include_self);
+    int winningTarget(const PublicInfo& env, int player);
 };
 
 #endif // RANDOM_H

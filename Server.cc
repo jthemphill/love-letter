@@ -7,7 +7,7 @@
 #include <stdexcept>
 #include <vector>
 
-constexpr int MAX_POINTS(int nplayers) {
+constexpr int max_tokens(int nplayers) {
     return 12 / nplayers + 1;
 }
 
@@ -15,9 +15,9 @@ int Server::game(int nplayers, std::default_random_engine& rng, bool verbose) {
     std::uniform_int_distribution<> player_roll(0, nplayers - 1);
     int starting_player = player_roll(rng);
 
-    int scores[nplayers];
+    int tokens[nplayers];
     for (int i = 0; i < nplayers; ++i) {
-        scores[i] = 0;
+        tokens[i] = 0;
     }
 
     int nrounds = 1;
@@ -26,18 +26,18 @@ int Server::game(int nplayers, std::default_random_engine& rng, bool verbose) {
             printf("=== ROUND %d ===\n", nrounds);
         }
 
-        int winner = round(starting_player, rng, nplayers, verbose);
-        ++scores[winner];
+        int winner = round(nplayers, starting_player, rng, tokens, verbose);
+        ++tokens[winner];
 
         if (verbose) {
             printf("Scores: \n");
             for (int i = 0; i < nplayers; ++i) {
-                printf("Player %d: %d\n", i, scores[i]);
+                printf("Player %d: %d\n", i, tokens[i]);
             }
             printf("\n");
         }
 
-        if (scores[winner] == MAX_POINTS(nplayers)) {
+        if (tokens[winner] == max_tokens(nplayers)) {
             if (verbose) {
                 printf("=== PLAYER %d WINS ===\n\n", winner);
             }
@@ -49,10 +49,11 @@ int Server::game(int nplayers, std::default_random_engine& rng, bool verbose) {
     }
 }
 
-int Server::round(int starting_player, std::default_random_engine& rng,
-                  int num_players, bool verbose) {
+int Server::round(int nplayers, int starting_player,
+                  std::default_random_engine& rng,
+                  const int tokens[], bool verbose) {
     History history;
-    Round round(starting_player, num_players, rng, verbose);
+    Round round(nplayers, starting_player, rng, tokens, verbose);
 
     if (verbose) {
         printf("Deck:\n");
@@ -61,7 +62,7 @@ int Server::round(int starting_player, std::default_random_engine& rng,
 
     const PublicInfo& info = round.getPublicInfo();
 
-    Bot* bots[num_players];
+    Bot* bots[nplayers];
     bots[0] = new GreedyBot(info, rng(), 0);
     bots[1] = new GuardBot(info, rng(), 1);
     for (int i = 2; i < 4; ++i) {
@@ -100,7 +101,7 @@ int Server::round(int starting_player, std::default_random_engine& rng,
 
         for (const Event* e : events) {
             history.push_back(e);
-            for (int j = 0; j < num_players; ++j) {
+            for (int j = 0; j < nplayers; ++j) {
                 if (e->type_ != Event::REVEALED || info.activePlayer_ == j) {
                     bots[j]->addEvent(*e);
                 }
@@ -113,7 +114,7 @@ int Server::round(int starting_player, std::default_random_engine& rng,
         printf("Player %d wins.\n\n", winner);
     }
 
-    for (int i = 0; i < num_players; ++i) {
+    for (int i = 0; i < nplayers; ++i) {
         delete bots[i];
     }
 

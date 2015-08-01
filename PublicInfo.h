@@ -19,7 +19,7 @@ struct PublicInfo {
 
     void nextPlayer();
 
-    PublicInfo(int starting_player, int num_players);
+    PublicInfo(int nplayers, int starting_player, const int tokens[]);
 
     bool legalMove(const Choice& choice) const;
     bool legalTarget(int current_player, const TargetedAction& action) const;

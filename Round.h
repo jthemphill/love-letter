@@ -7,7 +7,7 @@
 #include "PublicInfo.h"
 
 class Round {
-    PublicInfo env_;
+    PublicInfo info_;
     int turn_;
     Card hands_[4];
     Card deck_[16];
@@ -21,8 +21,9 @@ class Round {
     int sumCards(int player) const;
 
 public:
-    Round(int starting_player, int num_players,
-          std::default_random_engine rng, bool verbose = false);
+    Round(int nplayers, int starting_player,
+          std::default_random_engine rng, const int tokens[],
+          bool verbose = false);
 
     const PublicInfo& getPublicInfo() const;
     bool isOver() const;
