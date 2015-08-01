@@ -63,7 +63,7 @@ int Server::round(int starting_player, std::default_random_engine& rng,
 
     Bot* bots[num_players];
     bots[0] = new GreedyBot(info, rng(), 0);
-    bots[1] = new GreedyBot(info, rng(), 1);
+    bots[1] = new GuardBot(info, rng(), 1);
     for (int i = 2; i < 4; ++i) {
       bots[i] = new RandomBot(info, rng(), i);
     }
