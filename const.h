@@ -45,7 +45,7 @@ inline const char* name_of_card(Card c) {
     case COUNTESS: return "Countess";
     case PRINCESS: return "Princess";
     default:
-        return NULL;
+        return 0;
     }
 }
 

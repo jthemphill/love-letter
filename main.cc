@@ -8,7 +8,7 @@
 #include "Server.h"
 
 const int NPLAYERS = 4;
-const int NGAMES = 10000;
+const int NGAMES = 100;
 
 int main(int argc, char **argv) {
     bool verbose = false;

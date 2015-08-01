@@ -1,4 +1,4 @@
-CXXFLAGS += -std=c++14 -Wall -Werror
+CXXFLAGS += -std=c++11 -Wall -Werror
 
 ifeq ($(FAST), 1)
   CXXFLAGS += -O2

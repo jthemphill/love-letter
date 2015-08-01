@@ -14,13 +14,10 @@ const Action* GreedyBot::makeChoice(Card hand_card, Card drawn_card) {
     }
 
     Card lower_card;
-    Card higher_card;
     if (hand_card <= drawn_card) {
         lower_card = hand_card;
-        higher_card = drawn_card;
     } else {
         lower_card = drawn_card;
-        higher_card = hand_card;
     }
 
     int target;

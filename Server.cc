@@ -4,6 +4,7 @@
 #include "GuardBot.h"
 #include "RandomBot.h"
 
+#include <stdexcept>
 #include <vector>
 
 constexpr int MAX_POINTS(int nplayers) {
@@ -62,7 +63,7 @@ int Server::round(int starting_player, std::default_random_engine& rng,
 
     Bot* bots[num_players];
     bots[0] = new GreedyBot(info, 0);
-    bots[1] = new GuardBot(info, 1);
+    bots[1] = new GreedyBot(info, 1);
     for (int i = 2; i < 4; ++i) {
         bots[i] = new RandomBot(info, i);
     }
@@ -94,7 +95,7 @@ int Server::round(int starting_player, std::default_random_engine& rng,
         if (!round.completeTurn(events, choice)) {
             printf("Player %d tried to make an illegal move!\n",
                    info.activePlayer_);
-            exit(1);
+            throw std::logic_error("Aborting.");
         }
 
         for (const Event* e : events) {

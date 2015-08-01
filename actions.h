@@ -18,7 +18,6 @@ struct TargetedAction : Action {
 };
 
 struct GuardAction : TargetedAction {
-    int targetPlayer_;
     Card cardNamed_;
 
     GuardAction(int targetPlayer, Card cardNamed)
