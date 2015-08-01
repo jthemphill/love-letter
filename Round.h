@@ -21,7 +21,8 @@ class Round {
     int sumCards(int player) const;
 
 public:
-    Round(int starting_player, int num_players, bool verbose = false);
+    Round(int starting_player, int num_players,
+          std::default_random_engine rng, bool verbose = false);
 
     const PublicInfo& getPublicInfo() const;
     bool isOver() const;

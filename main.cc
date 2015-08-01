@@ -18,15 +18,14 @@ int main(int argc, char **argv) {
 
     std::random_device rd;
     std::default_random_engine rng(rd());
-    std::uniform_int_distribution<> players(0, NPLAYERS - 1);
 
     Server server;
-    server.game(players(rng), NPLAYERS, verbose);
+    server.game(NPLAYERS, rng, verbose);
 
     printf("\nRunning %d games.\n", NGAMES);
     int scores[4] = { 0 };
     for (int i = 0; i < NGAMES; ++i) {
-        int winner = server.game(players(rng), NPLAYERS, false);
+        int winner = server.game(NPLAYERS, rng, false);
         ++scores[winner];
     }
 

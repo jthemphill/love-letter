@@ -6,7 +6,8 @@
 #include "PublicInfo.h"
 #include "const.h"
 
-Round::Round(int starting_player, int num_players, bool verbose)
+Round::Round(int starting_player, int num_players,
+             std::default_random_engine rng, bool verbose)
     : env_(starting_player, num_players), drawn_(UNKNOWN), verbose_(verbose) {
 
     turn_ = 0;
@@ -16,7 +17,7 @@ Round::Round(int starting_player, int num_players, bool verbose)
         }
     }
 
-    std::shuffle(deck_, &deck_[16], std::default_random_engine());
+    std::shuffle(deck_, &deck_[16], rng);
 
     burn_ = drawCard();
 
@@ -74,7 +75,7 @@ int Round::getWinner() const {
         for (int i = 0; i < num_winners; ++i) {
             int sum = env_.sumCards(winners[i]);
             // If two people have the same sum, the younger player
-            // wins. This corresponds to the player with a low id
+            // wins. We'll say that's the player with the lower id
             // number.
             if (sum > high_sum) {
                 real_winner = winners[i];

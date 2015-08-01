@@ -10,7 +10,10 @@ constexpr int MAX_POINTS(int nplayers) {
     return 12 / nplayers + 1;
 }
 
-int Server::game(int starting_player, int nplayers, bool verbose) {
+int Server::game(int nplayers, std::default_random_engine& rng, bool verbose) {
+    std::uniform_int_distribution<> player_roll(0, nplayers - 1);
+    int starting_player = player_roll(rng);
+
     int scores[nplayers];
     for (int i = 0; i < nplayers; ++i) {
         scores[i] = 0;
@@ -22,7 +25,7 @@ int Server::game(int starting_player, int nplayers, bool verbose) {
             printf("=== ROUND %d ===\n", nrounds);
         }
 
-        int winner = round(starting_player, nplayers, verbose);
+        int winner = round(starting_player, rng, nplayers, verbose);
         ++scores[winner];
 
         if (verbose) {
@@ -45,9 +48,15 @@ int Server::game(int starting_player, int nplayers, bool verbose) {
     }
 }
 
-int Server::round(int starting_player, int num_players, bool verbose) {
+int Server::round(int starting_player, std::default_random_engine& rng,
+                  int num_players, bool verbose) {
     History history;
-    Round round(starting_player, num_players, verbose);
+    Round round(starting_player, num_players, rng, verbose);
+
+    if (verbose) {
+        printf("Deck:\n");
+        round.printDeck();
+    }
 
     const PublicInfo& info = round.getPublicInfo();
 

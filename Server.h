@@ -9,8 +9,9 @@
 class Server {
 
 public:
-    int game(int starting_player, int nplayers, bool verbose);
-    int round(int starting_player, int num_players, bool verbose = false);
+    int game(int nplayers, std::default_random_engine& rng, bool verbose);
+    int round(int starting_player, std::default_random_engine& rng,
+              int num_players, bool verbose);
 };
 
 #endif // SERVER_H
