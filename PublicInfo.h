@@ -3,6 +3,7 @@
 
 #include <vector>
 
+#include "choice.h"
 #include "events.h"
 #include "types.h"
 
@@ -21,6 +22,7 @@ struct PublicInfo {
     PublicInfo(int starting_player, int num_players);
 
     bool legalMove(const Choice& choice) const;
+    bool legalTarget(int current_player, const TargetedAction& action) const;
     int livePlayers() const;
     int targetablePlayers() const;
     bool canTarget(int player) const;

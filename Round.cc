@@ -149,13 +149,13 @@ bool Round::completeTurn(
     drawn_ = UNKNOWN;
     events.push_back(new ActionEvent(turn_, player, choice.action_));
 
-    const Action& action = choice.action_;
+    const Action* action = choice.action_;
 
-    if (action.card_ == choice.holding_) {
+    if (action->card_ == choice.holding_) {
         hands_[player] = choice.drawn_;
     }
 
-    switch (action.card_) {
+    switch (action->card_) {
     case UNKNOWN:
         printf("Tried to play an UNKNOWN card!\n");
         exit(1);
@@ -172,37 +172,15 @@ bool Round::completeTurn(
         break;
     }
 
-    int target = action.targetPlayer_;
-    if (target >= 0) {
-        switch (action.card_) {
-        case GUARD:
-            if (hands_[target] == action.cardNamed_) {
-                killPlayer(events, target);
-            }
-            break;
-        case PRIEST:
-            break;
-        case BARON:
-            if (hands_[target] == hands_[player]) {
-                break;
-            }
-            killPlayer(events,
-                       hands_[target] < hands_[player] ? target : player);
-            break;
-        case PRINCE:
-            discard(events, player, target);
-            hands_[target] = drawCard();
-            break;
-        case KING:
-        {
-            Card temp = hands_[target];
-            hands_[target] = hands_[player];
-            hands_[player] = temp;
-            break;
-        }
-        default:
-            break;
-        }
+    switch (action->card_) {
+    case GUARD:
+    case PRIEST:
+    case BARON:
+    case PRINCE:
+    case KING:
+        resolveTargetedAction(events, player, *((const TargetedAction*) action));
+    default:
+        break;
     }
 
     for (auto& e : events) {
@@ -212,6 +190,46 @@ bool Round::completeTurn(
 
     env_.nextPlayer();
     return true;
+}
+
+void Round::resolveTargetedAction(History& events, int player,
+                                  const TargetedAction& action) {
+    int target = action.targetPlayer_;
+    if (target == NOBODY) {
+        return;
+    }
+
+    switch (action.card_) {
+    case GUARD:
+    {
+        const GuardAction& guard_action = (const GuardAction&) action;
+        if (hands_[target] == guard_action.cardNamed_) {
+            killPlayer(events, target);
+        }
+    }
+        break;
+    case PRIEST:
+        break;
+    case BARON:
+        if (hands_[target] == hands_[player]) {
+            break;
+        }
+        killPlayer(events, hands_[target] < hands_[player] ? target : player);
+        break;
+    case PRINCE:
+        discard(events, player, target);
+        hands_[target] = drawCard();
+        break;
+    case KING:
+    {
+        Card temp = hands_[target];
+        hands_[target] = hands_[player];
+        hands_[player] = temp;
+        break;
+    }
+    default:
+        break;
+    }
 }
 
 void Round::killPlayer(History& events, int player) {

@@ -18,7 +18,7 @@ public:
     RandomBot(const PublicInfo& info, int player);
 
     void addEvent(const Event* event);
-    Action makeChoice(Card hand_card, Card drawn_card);
+    const Action* makeChoice(Card hand_card, Card drawn_card);
 };
 
 #endif // RANDOM_BOT_H

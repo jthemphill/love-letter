@@ -29,11 +29,10 @@ void PublicInfo::nextPlayer() {
 }
 
 bool PublicInfo::legalMove(const Choice& choice) const {
-    const Action& action = choice.action_;
-    Card card = action.card_;
-    int target = action.targetPlayer_;
+    const Action* action = choice.action_;
+    Card card = action->card_;
 
-    if (!action.played_ || card == UNKNOWN) {
+    if (card == UNKNOWN) {
         return false;
     }
 
@@ -41,41 +40,18 @@ bool PublicInfo::legalMove(const Choice& choice) const {
         return false;
     }
 
-    if (target >= 0) {
-        // If there is a target, make sure it's legal
-        if (!canTarget(target)) {
+    switch (card) {
+    case GUARD:
+    case PRIEST:
+    case BARON:
+    case PRINCE:
+    case KING:
+        if (!legalTarget(choice.player_, *((const TargetedAction*) action))) {
             return false;
         }
-
-        switch (card) {
-        case GUARD:
-        case PRIEST:
-        case BARON:
-        case KING:
-            if (target == choice.player_) {
-                return false;
-            }
-            break;
-        default:
-            break;
-        }
-    } else {
-        // If no target, make sure no one else is targetable
-        switch (card) {
-        case GUARD:
-        case PRIEST:
-        case BARON:
-        case PRINCE:
-        case KING:
-            for (int i = 0; i < totalPlayers_; ++i) {
-                if (i != choice.player_ && canTarget(i)) {
-                    return false;
-                }
-            }
-            break;
-        default:
-            break;
-        }
+        break;
+    default:
+        break;
     }
 
     // Countess rule
@@ -84,6 +60,38 @@ bool PublicInfo::legalMove(const Choice& choice) const {
          countess_caught(choice.drawn_, choice.holding_))
         ) {
         return false;
+    }
+
+    return true;
+}
+
+bool PublicInfo::legalTarget(int source_player,
+                             const TargetedAction& action) const {
+    int target = action.targetPlayer_;
+
+    if (target == source_player) {
+        // The prince is the only targeted card that you can target
+        // yourself with.
+        return action.card_ == PRINCE;
+    }
+
+    if (target != NOBODY) {
+        if (!canTarget(target)) {
+            return false;
+        }
+    } else {
+        // You cannot target nobody with the prince
+        if (action.card_ == PRINCE) {
+            return false;
+        }
+
+        // With any other targeted card, you can target nobody only if
+        // no one else is a legal target
+        for (int i = 0; i < totalPlayers_; ++i) {
+            if (i != source_player && canTarget(i)) {
+                return false;
+            }
+        }
     }
 
     return true;
@@ -123,17 +131,17 @@ int PublicInfo::sumCards(int player) const {
         switch (e->type_) {
         case Event::DISCARD:
         {
-            const DiscardEvent& de = *((DiscardEvent *) e);
-            if (de.sourcePlayer_ == player) {
-                sum += int(de.cardDiscarded_);
+            const DiscardEvent& discard_event = *((DiscardEvent *) e);
+            if (discard_event.sourcePlayer_ == player) {
+                sum += int(discard_event.cardDiscarded_);
             }
             break;
         }
         case Event::ACTION:
         {
-            const ActionEvent& ae = *((ActionEvent *) e);
-            if (ae.sourcePlayer_ == player) {
-                sum += int(ae.action_.played_);
+            const ActionEvent& action_event = *((ActionEvent *) e);
+            if (action_event.sourcePlayer_ == player) {
+                sum += int(action_event.action_->card_);
             }
             break;
         }

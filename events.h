@@ -1,6 +1,7 @@
 #ifndef EVENTS_H
 #define EVENTS_H
 
+#include "actions.h"
 #include "types.h"
 
 struct Event {
@@ -38,11 +39,14 @@ struct DeathEvent : Event {
 
 struct ActionEvent : Event {
     int sourcePlayer_;
-    Action action_;
+    const Action* action_;
 
-    ActionEvent(int turn, int sourcePlayer, const Action& action)
+    ActionEvent(int turn, int sourcePlayer, const Action* action)
         : Event(Event::ACTION, turn), sourcePlayer_(sourcePlayer),
           action_(action) {}
+    ~ActionEvent() {
+        delete action_;
+    }
 };
 
 struct RevealedEvent : Event {

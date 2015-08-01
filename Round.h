@@ -31,6 +31,8 @@ public:
 
     Choice startTurn();
     bool completeTurn(History& history, const Choice& choice);
+    void resolveTargetedAction(History& events, int player,
+                               const TargetedAction& action);
 };
 
 #endif // ROUND_H
