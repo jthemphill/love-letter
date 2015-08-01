@@ -4,8 +4,8 @@
 #include "PublicInfo.h"
 #include "const.h"
 
-GuardBot::GuardBot(const PublicInfo& info, int player)
-    : info_(info), player_(player) {}
+GuardBot::GuardBot(const PublicInfo& info, int seed, int player)
+  : info_(info), player_(player), random_(seed) {}
 
 void GuardBot::addEvent(const Event& event) {
     events_.push_back(&event);

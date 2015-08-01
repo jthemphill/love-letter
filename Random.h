@@ -10,7 +10,7 @@ class Random {
     std::default_random_engine rng_;
 
 public:
-    Random();
+    Random(int seed);
     bool coinflip(int chance = 2);
     int roll(int min, int max);
     Card card(bool include_guard);

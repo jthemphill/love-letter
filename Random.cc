@@ -2,9 +2,7 @@
 
 #include "Random.h"
 
-Random::Random() {
-    std::random_device rd;
-    rng_ = std::default_random_engine(rd());
+Random::Random(int seed): rng_(seed) {
 }
 
 bool Random::coinflip(int chance) {

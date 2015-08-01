@@ -9,13 +9,12 @@
  * It's not any smarter than that, though.
  */
 class GreedyBot : public Bot {
-    Random random_;
-
     const PublicInfo& info_;
     int player_;
+    Random random_;
 
 public:
-    GreedyBot(const PublicInfo& info, int player);
+    GreedyBot(const PublicInfo& info, int seed, int player);
     void addEvent(const Event& event);
     const Action* makeChoice(Card hand_card, Card drawn_card);
 };

@@ -9,13 +9,12 @@
 #include "Random.h"
 
 class RandomBot : public Bot {
-    Random random_;
-
     const PublicInfo& info_;
     int player_;
+    Random random_;
 
 public:
-    RandomBot(const PublicInfo& info, int player);
+    RandomBot(const PublicInfo& info, int seed, int player);
 
     void addEvent(const Event& event);
     const Action* makeChoice(Card hand_card, Card drawn_card);

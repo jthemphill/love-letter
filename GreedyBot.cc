@@ -2,8 +2,8 @@
 #include "PublicInfo.h"
 #include "const.h"
 
-GreedyBot::GreedyBot(const PublicInfo& info, int player)
-    : info_(info), player_(player) {}
+GreedyBot::GreedyBot(const PublicInfo& info, int seed, int player)
+  : info_(info), player_(player), random_(seed) {}
 
 void GreedyBot::addEvent(const Event& event) {}
 

@@ -12,17 +12,16 @@
  * But it will only name cards that haven't been played yet.
  */
 class GuardBot : public Bot {
-    Random random_;
-
     const PublicInfo& info_;
     int player_;
+    Random random_;
 
     std::vector<const Event*> events_;
 
     Card chooseCardToName(Card hand_card, Card drawn_card);
 
 public:
-    GuardBot(const PublicInfo& info, int player);
+    GuardBot(const PublicInfo& info, int seed, int player);
     void addEvent(const Event& event);
     const Action* makeChoice(Card hand_card, Card drawn_card);
 };

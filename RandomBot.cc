@@ -2,8 +2,8 @@
 #include "Random.h"
 #include "const.h"
 
-RandomBot::RandomBot(const PublicInfo& env, int player)
-    : info_(env), player_(player) {}
+RandomBot::RandomBot(const PublicInfo& env, int seed, int player)
+  : info_(env), player_(player), random_(seed) {}
 
 void RandomBot::addEvent(const Event& event) {
 }
