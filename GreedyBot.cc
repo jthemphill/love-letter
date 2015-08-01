@@ -8,32 +8,42 @@ GreedyBot::GreedyBot(const PublicInfo& info, int player)
 void GreedyBot::addEvent(const Event* event) {}
 
 const Action* GreedyBot::makeChoice(Card hand_card, Card drawn_card) {
-    Card card_played;
-    if (countess_caught(hand_card, drawn_card)) {
-        card_played = hand_card;
-    } else if (countess_caught(drawn_card, hand_card)) {
-        card_played = drawn_card;
-    } else {
-        card_played = random_.coinflip(2) ? hand_card : drawn_card;
+    if (countess_caught(hand_card, drawn_card) ||
+        countess_caught(drawn_card, hand_card)) {
+        return new Action(COUNTESS);
     }
 
-    int target = NOBODY;
-    Card card_named = UNKNOWN;
+    Card lower_card;
+    Card higher_card;
+    if (hand_card <= drawn_card) {
+        lower_card = hand_card;
+        higher_card = drawn_card;
+    } else {
+        lower_card = drawn_card;
+        higher_card = hand_card;
+    }
 
-    switch (card_played) {
+    int target;
+    switch (lower_card) {
     case GUARD:
-        card_named = random_.card(false);
+    {
+        Card card_named = random_.card(false);
         target = random_.target(info_, player_, false);
         return new GuardAction(target, card_named);
+    }
     case PRIEST:
     case BARON:
     case KING:
-        target = random_.target(info_, player_, false);
-        return new TargetedAction(card_played, target);
+    {
+        int target = random_.target(info_, player_, false);
+        return new TargetedAction(lower_card, target);
+    }
     case PRINCE:
+    {
         target = random_.target(info_, player_, true);
-        return new TargetedAction(card_played, target);
+        return new TargetedAction(lower_card, target);
+    }
     default:
-        return new Action(card_played);
+        return new Action(lower_card);
     }
 }

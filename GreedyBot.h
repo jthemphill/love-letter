@@ -4,6 +4,10 @@
 #include "Bot.h"
 #include "Random.h"
 
+/**
+ * GreedyBot always plays the lower card.
+ * It's not any smarter than that, though.
+ */
 class GreedyBot : public Bot {
     Random random_;
 
