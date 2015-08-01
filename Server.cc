@@ -1,6 +1,7 @@
 #include "Server.h"
 #include "Bot.h"
 #include "GreedyBot.h"
+#include "GuardBot.h"
 #include "RandomBot.h"
 
 #include <vector>
@@ -52,7 +53,8 @@ int Server::round(int starting_player, int num_players, bool verbose) {
 
     Bot* bots[num_players];
     bots[0] = new GreedyBot(info, 0);
-    for (int i = 1; i < 4; ++i) {
+    bots[1] = new GuardBot(info, 1);
+    for (int i = 2; i < 4; ++i) {
         bots[i] = new RandomBot(info, i);
     }
 
@@ -90,7 +92,7 @@ int Server::round(int starting_player, int num_players, bool verbose) {
             history.push_back(e);
             for (int j = 0; j < num_players; ++j) {
                 if (e->type_ != Event::REVEALED || info.activePlayer_ == j) {
-                    bots[j]->addEvent(e);
+                    bots[j]->addEvent(*e);
                 }
             }
         }

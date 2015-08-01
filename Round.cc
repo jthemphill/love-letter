@@ -114,9 +114,11 @@ void Round::discard(History& history, int source_player, int target_player) {
     history.push_back(new DiscardEvent(turn_, source_player, target_player,
                                        hands_[target_player]));
 
-    if (hands_[target_player] == PRINCESS) {
+    if (hands_[target_player] == PRINCESS && env_.live_[target_player]) {
         killPlayer(history, target_player);
     }
+
+    hands_[target_player] = UNKNOWN;
 }
 
 Card Round::drawCard() {
@@ -218,7 +220,9 @@ void Round::resolveTargetedAction(History& events, int player,
         break;
     case PRINCE:
         discard(events, player, target);
-        hands_[target] = drawCard();
+        if (env_.live_[target]) {
+            hands_[target] = drawCard();
+        }
         break;
     case KING:
     {
@@ -236,6 +240,13 @@ void Round::killPlayer(History& events, int player) {
     env_.live_[player] = false;
 
     events.push_back(new DeathEvent(turn_, player, hands_[player]));
+
+    // The ousted player reveals their final card, unless that card
+    // was already played.
+    if (hands_[player] != PRINCESS) {
+        discard(events, player, player);
+    }
+
     if (verbose_) {
         printf("Player %d is out of the game!\n", player);
     }

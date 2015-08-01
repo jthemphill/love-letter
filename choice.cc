@@ -26,6 +26,7 @@ void Choice::print() const {
     case GUARD:
     case PRIEST:
     case BARON:
+    case PRINCE:
     case KING:
     {
         const TargetedAction& targeted_action = *((const TargetedAction*) action_);

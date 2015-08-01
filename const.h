@@ -15,24 +15,22 @@ enum Card {
     PRINCESS = 8,
 };
 
+const int QUANTITIES[9] = {
+    /* UNKNOWN */ -1,
+    /* GUARD */    5,
+    /* PRIEST */   2,
+    /* BARON */    2,
+    /* HANDMAID */ 2,
+    /* PRINCE */   2,
+    /* KING */     1,
+    /* COUNTESS */ 1,
+    /* PRINCESS */ 1,
+};
+
 const int NOBODY = -1;
 
 constexpr int quantity(Card c) {
-    switch (c) {
-    case UNKNOWN:
-        return -1;
-    case GUARD:
-        return 5;
-    case PRIEST:
-    case BARON:
-    case HANDMAID:
-    case PRINCE:
-        return 2;
-    case KING:
-    case COUNTESS:
-    case PRINCESS:
-        return 1;
-    }
+    return QUANTITIES[int(c)];
 }
 
 constexpr const char* name_of_card(Card c) {

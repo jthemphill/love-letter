@@ -7,7 +7,7 @@ else
 endif
 
 OBJECTS = PublicInfo.o Round.o Random.o GreedyBot.o RandomBot.o Server.o \
-choice.o
+choice.o GuardBot.o
 
 main:	main.cc $(OBJECTS)
 	$(CXX) $(CXXFLAGS) $^ -o $@
@@ -23,6 +23,8 @@ run: main
 	./main
 
 GreedyBot.o: GreedyBot.cc GreedyBot.h Bot.h events.h actions.h const.h \
+Random.h PublicInfo.h choice.h
+GuardBot.o: GuardBot.cc GuardBot.h Bot.h events.h actions.h const.h \
 Random.h PublicInfo.h choice.h
 PublicInfo.o: PublicInfo.cc PublicInfo.h choice.h const.h actions.h \
 events.h

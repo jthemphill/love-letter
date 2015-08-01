@@ -5,7 +5,7 @@
 GreedyBot::GreedyBot(const PublicInfo& info, int player)
     : info_(info), player_(player) {}
 
-void GreedyBot::addEvent(const Event* event) {}
+void GreedyBot::addEvent(const Event& event) {}
 
 const Action* GreedyBot::makeChoice(Card hand_card, Card drawn_card) {
     if (countess_caught(hand_card, drawn_card) ||

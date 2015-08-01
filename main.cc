@@ -6,6 +6,7 @@
 #include "RandomBot.h"
 #include "Server.h"
 
+const int NPLAYERS = 4;
 const int NGAMES = 10000;
 
 int main(int argc, char **argv) {
@@ -15,16 +16,16 @@ int main(int argc, char **argv) {
     }
 
     Server server;
-    server.game(0, 4, verbose);
+    server.game(0, NPLAYERS, verbose);
 
     printf("\nRunning %d games.\n", NGAMES);
     int scores[4] = { 0 };
     for (int i = 0; i < NGAMES; ++i) {
-        int winner = server.game(0, 4, false);
+        int winner = server.game(0, NPLAYERS, false);
         ++scores[winner];
     }
 
-    for (int i = 0; i < 4; ++i) {
+    for (int i = 0; i < NPLAYERS; ++i) {
         printf("Player %d won %d times.\n", i, scores[i]);
     }
 

@@ -40,26 +40,34 @@ bool PublicInfo::legalMove(const Choice& choice) const {
         return false;
     }
 
-    switch (card) {
-    case GUARD:
-    case PRIEST:
-    case BARON:
-    case PRINCE:
-    case KING:
-        if (!legalTarget(choice.player_, *((const TargetedAction*) action))) {
-            return false;
-        }
-        break;
-    default:
-        break;
-    }
-
     // Countess rule
     if (card != COUNTESS &&
         (countess_caught(choice.holding_, choice.drawn_) ||
          countess_caught(choice.drawn_, choice.holding_))
         ) {
         return false;
+    }
+
+    switch (card) {
+    case GUARD:
+    {
+        const GuardAction& guard_action = *(const GuardAction*) action;
+        if (guard_action.cardNamed_ == UNKNOWN ||
+            guard_action.cardNamed_ == GUARD) {
+            return false;
+        }
+        // FALLTHROUGH
+    }
+    case PRIEST:
+    case BARON:
+    case PRINCE:
+    case KING:
+        if (!legalTarget(choice.player_, *(const TargetedAction*) action)) {
+            return false;
+        }
+        break;
+    default:
+        break;
     }
 
     return true;

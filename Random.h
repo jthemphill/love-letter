@@ -12,6 +12,7 @@ class Random {
 public:
     Random();
     bool coinflip(int chance = 2);
+    int roll(int min, int max);
     Card card(bool include_guard);
     int target(const PublicInfo& env, int player, bool include_self);
 };
