@@ -144,6 +144,8 @@ bool Round::completeTurn(
     ) {
 
     History events;
+    events.reserve(32);
+
     int player = info_.activePlayer_;
 
     if (choice.player_ != player || !info_.legalMove(choice)) {
